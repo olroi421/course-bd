@@ -14,7 +14,7 @@ theme:
   name: material
   language: uk
   icon:
-    logo: fontawesome/solid/code
+    logo: fontawesome/solid/database
   features:
     - navigation.tabs
     - navigation.sections

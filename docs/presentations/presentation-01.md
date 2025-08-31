@@ -491,14 +491,6 @@ graph TB
 - 💰 **Оплата за використання**
 - 🛡️ **Вбудована відмовостійкість**
 
-```yaml
-# Amazon Aurora Serverless
-ScalingConfiguration:
-  AutoPause: true
-  MinCapacity: 1      # мінімум 1 ACU
-  MaxCapacity: 256    # максимум 256 ACU
-  SecondsUntilAutoPause: 300
-```
 
 ## Тенденції розвитку
 
