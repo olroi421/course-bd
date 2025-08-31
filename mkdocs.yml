@@ -6,6 +6,7 @@ site_url: https://olroi421.github.io/course-bd/
 # Repository
 repo_name: olroi421/course-bd
 repo_url: https://github.com/olroi421/course-bd
+edit_uri: edit/main/docs/
 
 # Copyright
 copyright: Copyright &copy; 2025 Олександр Ройко
@@ -26,6 +27,10 @@ theme:
     - search.share
     - content.code.copy
     - content.code.annotate
+    - content.action.edit
+    - content.action.view
+    - content.print
+
   palette:
     # Автоматична тема (за замовчуванням)
     - media: "(prefers-color-scheme)"
@@ -91,11 +96,13 @@ nav:
   - Лекції:
       - lectures/index.md
       - "Лекція 1. Еволюція систем управління даними": lectures/lecture-01.md
+      - "Лекція 2. Архітектура систем управління базами даних": lectures/lecture-02.md
   - Лабораторні роботи:
       - labs/index.md
   - Презентації:
       - presentations/index.md
       - "Еволюція систем управління даними": presentations/presentation-01.md
+      - "Архітектура систем управління базами даних": presentations/presentation-02.md
 
 # Extra CSS
 extra_css:
