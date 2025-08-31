@@ -26,6 +26,7 @@ theme:
     - search.share
     - content.code.copy
     - content.code.annotate
+    - content.action.edit
   palette:
     # Автоматична тема (за замовчуванням)
     - media: "(prefers-color-scheme)"
