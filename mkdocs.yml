@@ -30,24 +30,24 @@ theme:
     # Автоматична тема (за замовчуванням)
     - media: "(prefers-color-scheme)"
       scheme: default
-      primary: purple
-      accent: purple
+      primary: teal
+      accent: teal
       toggle:
         icon: material/brightness-auto
         name: Перемкнути на світлу тему
     # Світла тема
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: purple
-      accent: purple
+      primary: teal
+      accent: teal
       toggle:
         icon: material/brightness-7
         name: Перемкнути на темну тему
     # Темна тема
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: purple
-      accent: purple
+      primary: teal
+      accent: teal
       toggle:
         icon: material/brightness-4
         name: Перемкнути на автоматичну тему
@@ -90,12 +90,12 @@ nav:
   - Головна: index.md
   - Лекції:
       - lectures/index.md
-      - "Лекція 1. Вступ до сучасної веброзробки": lectures/lecture-01.md
+      - "Лекція 1. Еволюція систем управління даними": lectures/lecture-01.md
   - Лабораторні роботи:
       - labs/index.md
   - Презентації:
       - presentations/index.md
-      - "Вступ до сучасної веброзробки": presentations/presentation-01.md
+      - "Еволюція систем управління даними": presentations/presentation-01.md
 
 # Extra CSS
 extra_css:
