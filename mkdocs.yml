@@ -91,11 +91,13 @@ nav:
   - Лекції:
       - lectures/index.md
       - "Лекція 1. Еволюція систем управління даними": lectures/lecture-01.md
+      - "Лекція 2. Архітектура систем управління базами даних": lectures/lecture-02.md
   - Лабораторні роботи:
       - labs/index.md
   - Презентації:
       - presentations/index.md
       - "Еволюція систем управління даними": presentations/presentation-01.md
+      - "Архітектура систем управління базами даних": presentations/presentation-02.md
 
 # Extra CSS
 extra_css:
