@@ -1,11 +1,11 @@
-site_name: Вебпрограмування
-site_description: Повний курс з вебпрограмування з лекціями, лабораторними роботами та презентаціями.
+site_name: Бази даних
+site_description: Повний курс з баз даних з лекціями, лабораторними роботами та презентаціями.
 site_author: Олександр Ройко
-site_url: https://olroi421.github.io/course-web/
+site_url: https://olroi421.github.io/course-bd/
 
 # Repository
-repo_name: olroi421/course-web
-repo_url: https://github.com/olroi421/course-web
+repo_name: olroi421/course-bd
+repo_url: https://github.com/olroi421/course-bd
 
 # Copyright
 copyright: Copyright &copy; 2025 Олександр Ройко
