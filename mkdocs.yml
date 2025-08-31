@@ -6,6 +6,7 @@ site_url: https://olroi421.github.io/course-bd/
 # Repository
 repo_name: olroi421/course-bd
 repo_url: https://github.com/olroi421/course-bd
+edit_uri: edit/HEAD/docs/
 
 # Copyright
 copyright: Copyright &copy; 2025 Олександр Ройко
