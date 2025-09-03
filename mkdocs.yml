@@ -100,6 +100,7 @@ nav:
       - "Лекція 3. Моделі представлення даних": lectures/lecture-03.md
   - Лабораторні роботи:
       - labs/index.md
+      - "Лабораторна робота 1. Робота з СУБД PostgreSQL та основи SQL": labs/lab-01.md
   - Презентації:
       - presentations/index.md
       - "Еволюція систем управління даними": presentations/presentation-01.md
