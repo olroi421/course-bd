@@ -710,7 +710,7 @@ FROM products;
 1. Зареєструватися на [supabase.com](https://supabase.com).
 2. Створити новий проєкт PostgreSQL.
 3. Зберегти пароль бази даних.
-4. Імпортувати файл [technomart.sql](assets/technomart.sql) в проєкт.
+4. Імпортувати файл [:material-database-arrow-down: technomart.sql](assets/technomart.sql) в проєкт.
 5. Перевірити створення таблиць в Table Editor.
 6. Дослідити структуру БД.
 7. Виконати завдання відповідно до обраного рівня складності. Зробити скріншоти результатів.
