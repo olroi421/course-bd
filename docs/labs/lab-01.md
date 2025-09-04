@@ -707,7 +707,7 @@ FROM products;
 
 ## ▶️ Хід роботи
 
-1. Зареєструватися на [supabase.com](https://supabase.com).
+1. Зареєструватися на [:fontawesome-solid-user-plus: supabase.com](https://supabase.com).
 2. Створити новий проєкт PostgreSQL.
 3. Зберегти пароль бази даних.
 4. Імпортувати файл [:material-database-arrow-down: technomart.sql](assets/technomart.sql) в проєкт.
