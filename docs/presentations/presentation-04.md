@@ -650,6 +650,88 @@ LIMIT 5;                         -- 7. Обмеження
 LIMIT_5(SORT_avg_DESC(σ_AVG>30000(γ_dept;AVG(sal)(σ_date>'2020'(EMPLOYEES)))))
 ```
 
+## Загальний порядок виконання SQL запиту
+
+```mermaid
+flowchart TD
+    Start([Початок виконання SQL]) --> CheckUnion{Є UNION?}
+
+    CheckUnion -->|Ні| SimpleQuery["🔄 Простий запит"]
+    CheckUnion -->|Так| UnionQuery["🔀 UNION запит"]
+
+    %% Простий запит
+    SimpleQuery --> FROM["1️⃣ FROM + JOIN<br/>📊 Завантаження та<br/>об'єднання таблиць"]
+    FROM --> WHERE["2️⃣ WHERE<br/>🔍 Фільтрація рядків<br/>(до групування)"]
+    WHERE --> CheckGroup{Є GROUP BY?}
+
+    CheckGroup -->|Так| GROUP["3️⃣ GROUP BY<br/>📦 Групування рядків<br/>для агрегатних функцій"]
+    CheckGroup -->|Ні| SELECT
+
+    GROUP --> CheckHaving{Є HAVING?}
+    CheckHaving -->|Так| HAVING["4️⃣ HAVING<br/>🔍 Фільтрація груп<br/>(після групування)"]
+    CheckHaving -->|Ні| SELECT
+    HAVING --> SELECT
+
+    SELECT["5️⃣ SELECT<br/>📋 Вибір колонок та<br/>обчислення виразів"]
+    SELECT --> CheckDistinct{Є DISTINCT?}
+
+    CheckDistinct -->|Так| DISTINCT["6️⃣ DISTINCT<br/>🗂️ Видалення дублікатів"]
+    CheckDistinct -->|Ні| FinalOps
+    DISTINCT --> FinalOps
+
+    %% UNION запит
+    UnionQuery --> SubQuery1["SELECT #1<br/>🔄 Повний цикл виконання"]
+    UnionQuery --> SubQuery2["SELECT #2<br/>🔄 Повний цикл виконання"]
+    UnionQuery --> SubQueryN["SELECT #N<br/>🔄 Повний цикл виконання"]
+
+    SubQuery1 --> SubFrom1["1️⃣ FROM + JOIN"]
+    SubFrom1 --> SubWhere1["2️⃣ WHERE"]
+    SubWhere1 --> SubGroup1["3️⃣ GROUP BY"]
+    SubGroup1 --> SubHaving1["4️⃣ HAVING"]
+    SubHaving1 --> SubSelect1["5️⃣ SELECT"]
+    SubSelect1 --> SubDistinct1["6️⃣ DISTINCT"]
+
+    SubQuery2 --> SubFrom2["1️⃣ FROM + JOIN"]
+    SubFrom2 --> SubWhere2["2️⃣ WHERE"]
+    SubWhere2 --> SubGroup2["3️⃣ GROUP BY"]
+    SubGroup2 --> SubHaving2["4️⃣ HAVING"]
+    SubHaving2 --> SubSelect2["5️⃣ SELECT"]
+    SubSelect2 --> SubDistinct2["6️⃣ DISTINCT"]
+
+    SubQueryN --> SubFromN["1️⃣ FROM + JOIN"]
+    SubFromN --> SubWhereN["2️⃣ WHERE"]
+    SubWhereN --> SubGroupN["3️⃣ GROUP BY"]
+    SubGroupN --> SubHavingN["4️⃣ HAVING"]
+    SubHavingN --> SubSelectN["5️⃣ SELECT"]
+    SubSelectN --> SubDistinctN["6️⃣ DISTINCT"]
+
+    SubDistinct1 --> UNION["🔀 UNION/UNION ALL<br/>🤝 Об'єднання результатів<br/>± видалення дублікатів"]
+    SubDistinct2 --> UNION
+    SubDistinctN --> UNION
+
+    UNION --> FinalOps
+
+    %% Фінальні операції
+    FinalOps["🎯 Фінальні операції"] --> CheckOrder{Є ORDER BY?}
+
+    CheckOrder -->|Так| ORDER["7️⃣ ORDER BY<br/>📊 Сортування фінального<br/>результату"]
+    CheckOrder -->|Ні| CheckLimit
+    ORDER --> CheckLimit{Є LIMIT/OFFSET?}
+
+    CheckLimit -->|Так| LIMIT["8️⃣ LIMIT/OFFSET<br/>✂️ Обмеження кількості<br/>рядків у результаті"]
+    CheckLimit -->|Ні| Result
+    LIMIT --> Result
+
+    Result[["🎉 Фінальний результат"]]
+
+    %% Додаємо блок з прикладом
+    Example["💡 Приклад запиту:<br/><br/>SELECT d.name, AVG(e.salary), COUNT(*)<br/>FROM employees e<br/>JOIN departments d ON e.dept_id = d.id<br/>WHERE e.salary > 40000<br/>GROUP BY d.id, d.name<br/>HAVING COUNT(*) > 2<br/>ORDER BY AVG(e.salary) DESC<br/>LIMIT 10"]
+
+    Example -.->|"Порядок виконання"| FROM
+
+```
+
+
 ## Оптимізація SQL через алгебру
 
 ### ⚡ Принципи оптимізатора:
