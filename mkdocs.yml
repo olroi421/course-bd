@@ -35,24 +35,24 @@ theme:
     # Автоматична тема (за замовчуванням)
     - media: "(prefers-color-scheme)"
       scheme: default
-      primary: teal
-      accent: teal
+      primary: blue
+      accent: blue
       toggle:
         icon: material/brightness-auto
         name: Перемкнути на світлу тему
     # Світла тема
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: teal
-      accent: teal
+      primary: blue
+      accent: blue
       toggle:
         icon: material/brightness-7
         name: Перемкнути на темну тему
     # Темна тема
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: teal
-      accent: teal
+      primary: blue
+      accent: blue
       toggle:
         icon: material/brightness-4
         name: Перемкнути на автоматичну тему
@@ -98,6 +98,7 @@ nav:
       - "Лекція 1. Еволюція систем управління даними": lectures/lecture-01.md
       - "Лекція 2. Архітектура систем управління базами даних": lectures/lecture-02.md
       - "Лекція 3. Моделі представлення даних": lectures/lecture-03.md
+      - "Лекція 4. Реляційна модель даних": lectures/lecture-04.md
   - Лабораторні роботи:
       - labs/index.md
       - "Лабораторна робота 1. Робота з СУБД PostgreSQL та основи SQL": labs/lab-01.md
@@ -106,6 +107,7 @@ nav:
       - "Еволюція систем управління даними": presentations/presentation-01.md
       - "Архітектура систем управління базами даних": presentations/presentation-02.md
       - "Моделі представлення даних": presentations/presentation-03.md
+      - "Реляційна модель даних": presentations/presentation-04.md
 
 # Extra CSS
 extra_css:
