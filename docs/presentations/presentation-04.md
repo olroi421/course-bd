@@ -685,7 +685,7 @@ JOIN (SELECT id, dept_name FROM departments WHERE budget > 100000) d
 ### 🎯 Чому це важливо:
 
 ```mermaid
-graph TD
+graph LR
     A[🧠 РОЗУМІННЯ АЛГЕБРИ] --> B[📝 Кращі SQL запити]
     A --> C[⚡ Розуміння оптимізації]
     A --> D[🐛 Діагностика проблем]
