@@ -99,6 +99,8 @@ nav:
       - "Лекція 2. Архітектура систем управління базами даних": lectures/lecture-02.md
       - "Лекція 3. Моделі представлення даних": lectures/lecture-03.md
       - "Лекція 4. Реляційна модель даних": lectures/lecture-04.md
+      - "Лекція 5. Концептуальне моделювання предметних областей": lectures/lecture-05.md
+
   - Лабораторні роботи:
       - labs/index.md
       - "Лабораторна робота 1. Робота з СУБД PostgreSQL та основи SQL": labs/lab-01.md
@@ -108,6 +110,7 @@ nav:
       - "Архітектура систем управління базами даних": presentations/presentation-02.md
       - "Моделі представлення даних": presentations/presentation-03.md
       - "Реляційна модель даних": presentations/presentation-04.md
+      - "Концептуальне моделювання предметних областей": presentations/presentation-05.md
 
 # Extra CSS
 extra_css:
