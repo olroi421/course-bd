@@ -1,0 +1,13 @@
+/* Центрування всіх зображень */
+.md-content img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Центрування Mermaid діаграм */
+.mermaid {
+    text-align: center;
+    margin: 1.5em auto;
+}
