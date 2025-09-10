@@ -559,6 +559,8 @@ graph LR
     B --> H[⚪ grade]
 ```
 
+![Chen Notation](https://www.conceptdraw.com/How-To-Guide/picture/chen-erd.png)
+
 **🎯 Особливості:**
 - **Прямокутники** для сутностей
 - **Ромби** для зв'язків
@@ -577,6 +579,8 @@ erDiagram
     ORDER ||--o{ ORDER_LINE : contains
     PRODUCT ||--o{ ORDER_LINE : includes
 ```
+
+![Crow's Foot Notation](https://www.ermodelexample.com/wp-content/uploads/2020/02/crows-foot-notation-data-model-in-ie-crows-feet-intended-for-crows-foot-erd-examples.png)
 
 **🎯 Символи кардинальності:**
 - **|** — один
