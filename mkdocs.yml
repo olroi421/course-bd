@@ -104,6 +104,7 @@ nav:
   - Лабораторні роботи:
       - labs/index.md
       - "Лабораторна робота 1. Робота з СУБД PostgreSQL та основи SQL": labs/lab-01.md
+      - "Лабораторна робота 2. Створення складних SQL запитів": labs/lab-02.md
   - Презентації:
       - presentations/index.md
       - "Еволюція систем управління даними": presentations/presentation-01.md
