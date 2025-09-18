@@ -468,7 +468,6 @@ SELECT * FROM cte_name;
     JOIN categories c ON p.category_id = c.category_id
     ORDER BY c.category_name, p.unit_price DESC;
     ```
-
     4. Порівняти замовлення кожного клієнта з попереднім за датою:
     ```sql
     -- Ваш код тут - використайте LAG() та LEAD()
@@ -527,8 +526,6 @@ SELECT * FROM cte_name;
 9. Завантажити звіт зі скріншотами в репозиторій на GitHub.
 10. Як відповідь на завдання в LMS Moodle вставити посилання на репозиторій.
 11. Захистити лабораторну перед викладачем.
-
-
 
 ## ❓ Контрольні запитання
 
