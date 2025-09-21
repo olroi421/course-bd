@@ -100,6 +100,8 @@ nav:
       - "Лекція 3. Моделі представлення даних": lectures/lecture-03.md
       - "Лекція 4. Реляційна модель даних": lectures/lecture-04.md
       - "Лекція 5. Концептуальне моделювання предметних областей": lectures/lecture-05.md
+      - "Лекція 6. Теорія нормалізації реляційних схем": lectures/lecture-06.md
+      - "Лекція 7. Логічне та фізичне проектування": lectures/lecture-07.md
 
   - Лабораторні роботи:
       - labs/index.md
@@ -112,6 +114,7 @@ nav:
       - "Моделі представлення даних": presentations/presentation-03.md
       - "Реляційна модель даних": presentations/presentation-04.md
       - "Концептуальне моделювання предметних областей": presentations/presentation-05.md
+      - "Теорія нормалізації реляційних схем": presentations/presentation-06.md
 
 # Extra CSS
 extra_css:
