@@ -213,7 +213,7 @@ def closure(X, F):
 
 ```mermaid
 graph TD
-    A[Крок 1: result = {A}] --> B[Крок 2: A → BC<br/>result = (A,B,C)]
+    A[Крок 1: result = (A)] --> B[Крок 2: A → BC<br/>result = (A,B,C)]
     B --> C[Крок 3: B → D<br/>result = (A,B,C,D)]
     C --> D[Крок 4: CD → E<br/>result = (A,B,C,D,E)]
     D --> E[Крок 5: E → A<br/>A вже є, стоп]
