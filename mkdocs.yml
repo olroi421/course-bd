@@ -115,6 +115,7 @@ nav:
       - "Реляційна модель даних": presentations/presentation-04.md
       - "Концептуальне моделювання предметних областей": presentations/presentation-05.md
       - "Теорія нормалізації реляційних схем": presentations/presentation-06.md
+      - "Логічне та фізичне проектування": presentations/presentation-07.md
 
 # Extra CSS
 extra_css:

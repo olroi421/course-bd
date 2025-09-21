@@ -280,9 +280,9 @@ graph TD
 
 ```mermaid
 graph LR
-    A[🔑 Композитний ключ<br/>{student_id, subject_id}] --> B[❌ Часткова залежність<br/>student_id → student_name]
+    A[🔑 Композитний ключ<br/>student_id, subject_id] --> B[❌ Часткова залежність<br/>student_id → student_name]
     A --> C[❌ Часткова залежність<br/>subject_id → subject_name]
-    A --> D[✅ Повна залежність<br/>{student_id, subject_id} → grade]
+    A --> D[✅ Повна залежність<br/>student_id, subject_id → grade]
 ```
 
 
