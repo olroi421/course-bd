@@ -419,9 +419,6 @@ WHERE EXISTS (
 ```mermaid
 graph LR
     A[👥 customers<br/>10K записів<br/>country='Ukraine'<br/>↓ 1K] --> B[🛒 orders<br/>1M записів]
-
-    style A fill:#90EE90
-    style B fill:#FFB6C1
 ```
 
 **Принцип:** Спочатку фільтруємо меншу таблицю!
