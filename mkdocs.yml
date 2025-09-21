@@ -102,6 +102,7 @@ nav:
       - "Лекція 5. Концептуальне моделювання предметних областей": lectures/lecture-05.md
       - "Лекція 6. Теорія нормалізації реляційних схем": lectures/lecture-06.md
       - "Лекція 7. Логічне та фізичне проектування": lectures/lecture-07.md
+      - "Лекція 8. Обробка та оптимізація запитів": lectures/lecture-08.md
 
   - Лабораторні роботи:
       - labs/index.md
@@ -116,6 +117,7 @@ nav:
       - "Концептуальне моделювання предметних областей": presentations/presentation-05.md
       - "Теорія нормалізації реляційних схем": presentations/presentation-06.md
       - "Логічне та фізичне проектування": presentations/presentation-07.md
+      - "Обробка та оптимізація запитів": presentations/presentation-08.md
 
 # Extra CSS
 extra_css:
