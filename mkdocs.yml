@@ -103,6 +103,8 @@ nav:
       - "Лекція 6. Теорія нормалізації реляційних схем": lectures/lecture-06.md
       - "Лекція 7. Логічне та фізичне проектування": lectures/lecture-07.md
       - "Лекція 8. Обробка та оптимізація запитів": lectures/lecture-08.md
+      - "Лекція 9. Управління транзакціями та паралельним доступом": lectures/lecture-09.md
+      - "Лекція 10. Збережені процедури та активні бази даних": lectures/lecture-10.md
 
   - Лабораторні роботи:
       - labs/index.md
@@ -118,6 +120,8 @@ nav:
       - "Теорія нормалізації реляційних схем": presentations/presentation-06.md
       - "Логічне та фізичне проектування": presentations/presentation-07.md
       - "Обробка та оптимізація запитів": presentations/presentation-08.md
+      - "Управління транзакціями та паралельним доступом": presentations/presentation-09.md
+      - "Збережені процедури та активні бази даних": presentations/presentation-10.md
 
 # Extra CSS
 extra_css:
