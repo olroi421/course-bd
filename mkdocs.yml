@@ -105,6 +105,14 @@ nav:
       - "Лекція 8. Обробка та оптимізація запитів": lectures/lecture-08.md
       - "Лекція 9. Управління транзакціями та паралельним доступом": lectures/lecture-09.md
       - "Лекція 10. Збережені процедури та активні бази даних": lectures/lecture-10.md
+      - "Лекція 11. Теоретичні основи NoSQL систем": lectures/lecture-11.md
+      - "Лекція 12. MongoDB: архітектура та модель даних": lectures/lecture-12.md
+      - "Лекція 13. Проектування NoSQL схем": lectures/lecture-13.md
+      - "Лекція 14. Elasticsearch та пошукові системи": lectures/lecture-14.md
+      - "Лекція 15. Хмарні бази даних та Database-as-a-Service": lectures/lecture-15.md
+      - "Лекція 16. Масштабування та розподілені архітектури": lectures/lecture-16.md
+      - "Лекція 17. Безпека та адміністрування баз даних": lectures/lecture-17.md
+      - "Лекція 18. Моніторинг продуктивності та налагодження": lectures/lecture-18.md
 
   - Лабораторні роботи:
       - labs/index.md
@@ -122,6 +130,14 @@ nav:
       - "Обробка та оптимізація запитів": presentations/presentation-08.md
       - "Управління транзакціями та паралельним доступом": presentations/presentation-09.md
       - "Збережені процедури та активні бази даних": presentations/presentation-10.md
+      - "Теоретичні основи NoSQL систем": presentations/presentation-11.md
+      - "MongoDB: архітектура та модель даних": presentations/presentation-12.md
+      - "Проектування NoSQL схем": presentations/presentation-13.md
+      - "Elasticsearch та пошукові системи": presentations/presentation-14.md
+      - "Хмарні бази даних та Database-as-a-Service": presentations/presentation-15.md
+      - "Масштабування та розподілені архітектури": presentations/presentation-16.md
+      - "Безпека та адміністрування баз даних": presentations/presentation-17.md
+      - "Моніторинг продуктивності та налагодження": presentations/presentation-18.md
 
 # Extra CSS
 extra_css:
