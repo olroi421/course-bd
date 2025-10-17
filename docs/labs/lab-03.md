@@ -1304,6 +1304,8 @@ SELECT * FROM get_changes_report(CURRENT_DATE - INTERVAL '30 days');
 3. Як відповідь на завдання в LMS Moodle вставити посилання на репозиторій.
 4. Захистити лабораторну перед викладачем.
 
+[:fontawesome-solid-cloud-upload: Здати лабораторну роботу](http://194.187.154.85/moodle/course/view.php?id=32#section-2){ .md-button .md-button--primary }
+
 ## ❓ Контрольні запитання
 
 1. У чому полягає різниця між операторами INSERT, UPDATE та DELETE? Які обмеження необхідно враховувати при їх використанні?
