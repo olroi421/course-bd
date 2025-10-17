@@ -531,6 +531,7 @@ EXECUTE FUNCTION audit_books_changes();
 CREATE DATABASE library_lab3;
 ```
 4. Підключитися до створеної бази даних.
+
     ### Рівень 1
 
     #### Крок 1. Створення структури бази даних
