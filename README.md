@@ -28,6 +28,12 @@
 | Лекція 16 Масштабування та розподілені архітектури | [Конспект лекції](lectures/lecture-16.md) | [Презентація](presentations/presentation-16.md) |
 | Лекція 17 Безпека та адміністрування баз даних | [Конспект лекції](lectures/lecture-17.md) | [Презентація](presentations/presentation-17.md) |
 | Лекція 18 Моніторинг продуктивності та налагодження | [Конспект лекції](lectures/lecture-18.md) | [Презентація](presentations/presentation-18.md) |
+| * Лекція 19 Системи підтримки прийняття рішень та OLAP | [Конспект лекції](lectures/lecture-19.md) | [Презентація](presentations/presentation-19.md) |
+| * Лекція 20 Обробка великих обсягів даних (Big Data) | [Конспект лекції](lectures/lecture-20.md) | [Презентація](presentations/presentation-20.md) |
+| * Лекція 21 Часові ряди та IoT системи | [Конспект лекції](lectures/lecture-21.md) | [Презентація](presentations/presentation-21.md) |
+| * Лекція 22 Графові бази даних та мережевий аналіз | [Конспект лекції](lectures/lecture-22.md) | [Презентація](presentations/presentation-22.md) |
+| * Лекція 23 Штучний інтелект та машинне навчання у СУБД | [Конспект лекції](lectures/lecture-23.md) | [Презентація](presentations/presentation-23.md) |
+| * Лекція 24 Перспективи розвитку технологій баз даних | [Конспект лекції](lectures/lecture-24.md) | [Презентація](presentations/presentation-24.md) |
 
 ---
 
