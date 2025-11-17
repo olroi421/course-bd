@@ -32,8 +32,8 @@
 | Лекція 20 Обробка великих обсягів даних (Big Data) | [Конспект лекції](lectures/lecture-20.md) | [Презентація](presentations/presentation-20.md) |
 | Лекція 21 Часові ряди та IoT системи | [Конспект лекції](lectures/lecture-21.md) | [Презентація](presentations/presentation-21.md) |
 | Лекція 22 Графові бази даних та мережевий аналіз | [Конспект лекції](lectures/lecture-22.md) | [Презентація](presentations/presentation-22.md) |
-| * Лекція 23 Штучний інтелект та машинне навчання у СУБД | [Конспект лекції](lectures/lecture-23.md) | [Презентація](presentations/presentation-23.md) |
-| * Лекція 24 Перспективи розвитку технологій баз даних | [Конспект лекції](lectures/lecture-24.md) | [Презентація](presentations/presentation-24.md) |
+| Лекція 23 Штучний інтелект та машинне навчання у СУБД | [Конспект лекції](lectures/lecture-23.md) | [Презентація](presentations/presentation-23.md) |
+| Лекція 24 Перспективи розвитку технологій баз даних | [Конспект лекції](lectures/lecture-24.md) | [Презентація](presentations/presentation-24.md) |
 
 ---
 
