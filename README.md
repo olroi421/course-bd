@@ -12,7 +12,7 @@
 
 | Тема лекції | 📖 | 📊 |
 |------|------|------|
-| Лекція 01 Еволюція систем управління даними | [Конспект лекції](lectures/lecture-01.md) | [Презентація](presentations/presentation-01.md) |
+| Лекція 01 Еволюція та архітектура систем управління базами даних | [Конспект лекції](lectures/lecture-01.md) | [Презентація](presentations/presentation-01.md) |
 | _Лекція 02 Архітектура систем управління базами даних_ | [Конспект лекції](lectures/lecture-02.md) | [Презентація](presentations/presentation-02.md) |
 | _Лекція 03 Моделі представлення даних_ | [Конспект лекції](lectures/lecture-03.md) | [Презентація](presentations/presentation-03.md) |
 | _Лекція 04 Реляційна модель даних_ | [Конспект лекції](lectures/lecture-04.md) | [Презентація](presentations/presentation-04.md) |
