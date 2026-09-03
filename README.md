@@ -13,29 +13,21 @@
 | Тема лекції | 📖 | 📊 |
 |------|------|------|
 | Лекція 01 Еволюція та архітектура систем управління базами даних | [Конспект лекції](lectures/lecture-01.md) | [Презентація](presentations/presentation-01.md) |
-| _Лекція 02 Архітектура систем управління базами даних_ | [Конспект лекції](lectures/lecture-02.md) | [Презентація](presentations/presentation-02.md) |
-| _Лекція 03 Моделі представлення даних_ | [Конспект лекції](lectures/lecture-03.md) | [Презентація](presentations/presentation-03.md) |
-| _Лекція 04 Реляційна модель даних_ | [Конспект лекції](lectures/lecture-04.md) | [Презентація](presentations/presentation-04.md) |
-| _Лекція 05 Концептуальне моделювання предметних областей_ | [Конспект лекції](lectures/lecture-05.md) | [Презентація](presentations/presentation-05.md) |
-| _Лекція 06 Теорія нормалізації реляційних схем_ | [Конспект лекції](lectures/lecture-06.md) | [Презентація](presentations/presentation-06.md) |
-| _Лекція 07 Логічне та фізичне проектування_ | [Конспект лекції](lectures/lecture-07.md) | [Презентація](presentations/presentation-07.md) |
-| _Лекція 08 Обробка та оптимізація запитів_ | [Конспект лекції](lectures/lecture-08.md) | [Презентація](presentations/presentation-08.md) |
-| _Лекція 09 Управління транзакціями та паралельним доступом_ | [Конспект лекції](lectures/lecture-09.md) | [Презентація](presentations/presentation-09.md) |
-| _Лекція 10 Збережені процедури та активні бази даних_ | [Конспект лекції](lectures/lecture-10.md) | [Презентація](presentations/presentation-10.md) |
-| _Лекція 11 Теоретичні основи NoSQL систем_ | [Конспект лекції](lectures/lecture-11.md) | [Презентація](presentations/presentation-11.md) |
-| _Лекція 12 MongoDB: архітектура та модель даних_ | [Конспект лекції](lectures/lecture-12.md) | [Презентація](presentations/presentation-12.md) |
-| _Лекція 13 Проектування NoSQL схем_ | [Конспект лекції](lectures/lecture-13.md) | [Презентація](presentations/presentation-13.md) |
-| _Лекція 14 Elasticsearch та пошукові системи_ | [Конспект лекції](lectures/lecture-14.md) | [Презентація](presentations/presentation-14.md) |
-| _Лекція 15 Хмарні бази даних та Database-as-a-Service_ | [Конспект лекції](lectures/lecture-15.md) | [Презентація](presentations/presentation-15.md) |
-| _Лекція 16 Масштабування та розподілені архітектури_ | [Конспект лекції](lectures/lecture-16.md) | [Презентація](presentations/presentation-16.md) |
-| _Лекція 17 Безпека та адміністрування баз даних_ | [Конспект лекції](lectures/lecture-17.md) | [Презентація](presentations/presentation-17.md) |
-| _Лекція 18 Моніторинг продуктивності та налагодження_ | [Конспект лекції](lectures/lecture-18.md) | [Презентація](presentations/presentation-18.md) |
-| _Лекція 19 Системи підтримки прийняття рішень та OLAP_ | [Конспект лекції](lectures/lecture-19.md) | [Презентація](presentations/presentation-19.md) |
-| _Лекція 20 Обробка великих обсягів даних (Big Data)_ | [Конспект лекції](lectures/lecture-20.md) | [Презентація](presentations/presentation-20.md) |
-| _Лекція 21 Часові ряди та IoT системи_ | [Конспект лекції](lectures/lecture-21.md) | [Презентація](presentations/presentation-21.md) |
-| _Лекція 22 Графові бази даних та мережевий аналіз_ | [Конспект лекції](lectures/lecture-22.md) | [Презентація](presentations/presentation-22.md) |
-| _Лекція 23 Штучний інтелект та машинне навчання у СУБД_ | [Конспект лекції](lectures/lecture-23.md) | [Презентація](presentations/presentation-23.md) |
-| _Лекція 24 Перспективи розвитку технологій баз даних_ | [Конспект лекції](lectures/lecture-24.md) | [Презентація](presentations/presentation-24.md) |
+| Лекція 02 Моделі представлення даних | [Конспект лекції](lectures/lecture-03.md) | [Презентація](presentations/presentation-03.md) |
+| Лекція 03 Реляційна модель даних | [Конспект лекції](lectures/lecture-04.md) | [Презентація](presentations/presentation-04.md) |
+| _Лекція 04 Концептуальне моделювання предметних областей_ | [Конспект лекції](lectures/lecture-05.md) | [Презентація](presentations/presentation-05.md) |
+| _Лекція 05 Теорія нормалізації реляційних схем_ | [Конспект лекції](lectures/lecture-06.md) | [Презентація](presentations/presentation-06.md) |
+| _Лекція 06 Логічне та фізичне проектування_ | [Конспект лекції](lectures/lecture-07.md) | [Презентація](presentations/presentation-07.md) |
+| _Лекція 07 Обробка та оптимізація запитів_ | [Конспект лекції](lectures/lecture-08.md) | [Презентація](presentations/presentation-08.md) |
+| _Лекція 08 Управління транзакціями та паралельним доступом_ | [Конспект лекції](lectures/lecture-09.md) | [Презентація](presentations/presentation-09.md) |
+| _Лекція 09 Теоретичні основи NoSQL систем_ | [Конспект лекції](lectures/lecture-11.md) | [Презентація](presentations/presentation-11.md) |
+| _Лекція 10 MongoDB: архітектура та проєктування схем_ | [Конспект лекції](lectures/lecture-12.md) | [Презентація](presentations/presentation-12.md) |
+| _Лекція 11 Пошукові системи та Elasticsearch_ | [Конспект лекції](lectures/lecture-14.md) | [Презентація](presentations/presentation-14.md) |
+| _Лекція 12 Хмарні та розподілені СУБД_ | [Конспект лекції](lectures/lecture-15.md) | [Презентація](presentations/presentation-15.md) |
+| _Лекція 13 Безпека та адміністрування СУБД_ | [Конспект лекції](lectures/lecture-17.md) | [Презентація](presentations/presentation-17.md) |
+| _Лекція 14 Аналітичні СУБД та обробка великих даних_ | [Конспект лекції](lectures/lecture-19.md) | [Презентація](presentations/presentation-19.md) |
+| _Лекція 15 Графові бази даних та мережевий аналіз_ | [Конспект лекції](lectures/lecture-22.md) | [Презентація](presentations/presentation-22.md) |
+| _Лекція 16 Штучний інтелект, векторні бази даних та перспективи розвитку СУБД_ | [Конспект лекції](lectures/lecture-23.md) | [Презентація](presentations/presentation-23.md) |
 
 ---
 
