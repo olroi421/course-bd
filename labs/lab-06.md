@@ -1162,7 +1162,7 @@ db.books.find({ available: true });
 | Продуктивність читання | Залежить від JOIN | Швидше при денормалізації |
 | Продуктивність запису | Швидше при нормалізації | Може бути повільніше через дублювання |
 
-[🔼 Здати лабораторну роботу](http://194.187.154.85/moodle/course/view.php?id=32#section-2)
+[🔼 Здати лабораторну роботу](https://moodle.vcolnuft.volyn.ua/moodle/course/view.php?id=32#section-2)
 
 
 

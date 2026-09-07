@@ -719,7 +719,7 @@ FROM products;
 10. Як відповідь на завдання в LMS Moodle вставити посилання на репозиторій.
 11. Захистити лабораторну перед викладачем.
 
-[🔼 Здати лабораторну роботу](http://194.187.154.85/moodle/course/view.php?id=32#section-2)
+[🔼 Здати лабораторну роботу](https://moodle.vcolnuft.volyn.ua/moodle/course/view.php?id=32#section-2)
 
 ## ❓ Контрольні запитання
 
