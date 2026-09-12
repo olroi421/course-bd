@@ -1,4 +1,4 @@
-# Лабораторна робота 4 Розробка реляційної бази даних з простою інтеграцією
+# Лабораторна робота 04 Розробка реляційної бази даних з простою інтеграцією
 
 ## 🎯 Мета роботи
 
@@ -276,7 +276,7 @@
 
 ```bash
 docker --version
-docker-compose --version
+docker compose version
 ```
 
 **Створення docker-compose.yml:**
@@ -284,11 +284,9 @@ docker-compose --version
 У кореневій директорії вашого проєкту створіть файл `docker-compose.yml`:
 
 ```yaml
-version: '3.8'
-
 services:
   postgres:
-    image: postgres:15-alpine
+    image: postgres:17-alpine
     container_name: bookstore_db
     environment:
       POSTGRES_DB: bookstore
@@ -307,7 +305,7 @@ volumes:
 
 **Пояснення параметрів:**
 
-- `image: postgres:15-alpine` - використовується офіційний образ PostgreSQL версії 15 на базі Alpine Linux для зменшення розміру
+- `image: postgres:17-alpine` - використовується офіційний образ PostgreSQL версії 17 (актуальна стабільна лінійка) на базі Alpine Linux для зменшення розміру
 - `container_name` - зручна назва контейнера для управління
 - `environment` - змінні середовища для налаштування бази даних (назва БД, користувач, пароль)
 - `ports` - проброс порту 5432 для доступу до бази даних з хост-машини
@@ -318,13 +316,13 @@ volumes:
 
 ```bash
 # Запустити базу даних у фоновому режимі
-docker-compose up -d
+docker compose up -d
 
 # Перевірити статус контейнера
-docker-compose ps
+docker compose ps
 
 # Переглянути логи
-docker-compose logs -f postgres
+docker compose logs -f postgres
 ```
 
 **Підключення до бази даних:**
@@ -348,16 +346,16 @@ psql -h localhost -U postgres -d bookstore
 
 ```bash
 # Зупинити контейнер
-docker-compose stop
+docker compose stop
 
 # Запустити знову
-docker-compose start
+docker compose start
 
 # Повністю видалити контейнер та volume (очистити всі дані)
-docker-compose down -v
+docker compose down -v
 
 # Перезапустити з оновленою конфігурацією
-docker-compose up -d --force-recreate
+docker compose up -d --force-recreate
 
 # Виконати SQL-скрипт в контейнері
 docker exec -i bookstore_db psql -U postgres -d bookstore < database/create_tables.sql
@@ -381,11 +379,9 @@ database/
 Для зручності можна додати pgAdmin для візуального управління базою даних:
 
 ```yaml
-version: '3.8'
-
 services:
   postgres:
-    image: postgres:15-alpine
+    image: postgres:17-alpine
     container_name: bookstore_db
     environment:
       POSTGRES_DB: bookstore
@@ -1069,7 +1065,7 @@ pip install flask flask-wtf
 
 ```
 psycopg2-binary==2.9.9
-flask==3.0.0
+flask==3.1.0
 flask-wtf==1.2.1
 ```
 

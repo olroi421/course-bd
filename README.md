@@ -14,9 +14,9 @@
 | Лекція 01 Еволюція та архітектура систем управління базами даних | [Конспект лекції](lectures/lecture-01.md) | [Презентація](presentations/presentation-01.md) |
 | Лекція 02 Моделі представлення даних | [Конспект лекції](lectures/lecture-02.md) | [Презентація](presentations/presentation-02.md) |
 | Лекція 03 Реляційна модель даних | [Конспект лекції](lectures/lecture-03.md) | [Презентація](presentations/presentation-03.md) |
-| _Лекція 04 Концептуальне моделювання предметних областей_ | [Конспект лекції](lectures/lecture-05.md) | [Презентація](presentations/presentation-05.md) |
-| _Лекція 05 Теорія нормалізації реляційних схем_ | [Конспект лекції](lectures/lecture-06.md) | [Презентація](presentations/presentation-06.md) |
-| _Лекція 06 Логічне та фізичне проектування_ | [Конспект лекції](lectures/lecture-07.md) | [Презентація](presentations/presentation-07.md) |
+| Лекція 04 Концептуальне моделювання предметних областей | [Конспект лекції](lectures/lecture-04.md) | [Презентація](presentations/presentation-04.md) |
+| Лекція 05 Теорія нормалізації реляційних схем | [Конспект лекції](lectures/lecture-05.md) | [Презентація](presentations/presentation-05.md) |
+| Лекція 06 Логічне та фізичне проектування | [Конспект лекції](lectures/lecture-06.md) | [Презентація](presentations/presentation-06.md) |
 | _Лекція 07 Обробка та оптимізація запитів_ | [Конспект лекції](lectures/lecture-08.md) | [Презентація](presentations/presentation-08.md) |
 | _Лекція 08 Управління транзакціями та паралельним доступом_ | [Конспект лекції](lectures/lecture-09.md) | [Презентація](presentations/presentation-09.md) |
 | _Лекція 09 Теоретичні основи NoSQL систем_ | [Конспект лекції](lectures/lecture-11.md) | [Презентація](presentations/presentation-11.md) |
