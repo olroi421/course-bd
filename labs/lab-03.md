@@ -1299,12 +1299,12 @@ SELECT * FROM get_changes_report(CURRENT_DATE - INTERVAL '30 days');
 ```
 ### Підготовка звіту
 
-1. Створити файл `lab03-report.md` ([📑 приклад звіту](assets/lab03-report-example.download){: download="lab03-report.md"}). Додати опис виконаних запитів та результатів. Включити скріншоти.
+1. Створити файл `lab03-report.md` ([📑 Завантажити шаблон](assets/lab03-report-template.md)). Додати опис виконаних запитів та результатів. Включити скріншоти.
 2. Завантажити звіт зі скріншотами в репозиторій на GitHub.
 3. Як відповідь на завдання в LMS Moodle вставити посилання на репозиторій.
 4. Захистити лабораторну перед викладачем.
 
-[🔼 Здати лабораторну роботу](http://194.187.154.85/moodle/course/view.php?id=32#section-2)
+[🔼 Здати лабораторну роботу](https://moodle.vcolnuft.volyn.ua/moodle/course/view.php?id=32#section-2)
 
 ## ❓ Контрольні запитання
 
