@@ -17,8 +17,8 @@
 | Лекція 04 Концептуальне моделювання предметних областей | [Конспект лекції](lectures/lecture-04.md) | [Презентація](presentations/presentation-04.md) |
 | Лекція 05 Теорія нормалізації реляційних схем | [Конспект лекції](lectures/lecture-05.md) | [Презентація](presentations/presentation-05.md) |
 | Лекція 06 Логічне та фізичне проектування | [Конспект лекції](lectures/lecture-06.md) | [Презентація](presentations/presentation-06.md) |
-| _Лекція 07 Обробка та оптимізація запитів_ | [Конспект лекції](lectures/lecture-08.md) | [Презентація](presentations/presentation-08.md) |
-| _Лекція 08 Управління транзакціями та паралельним доступом_ | [Конспект лекції](lectures/lecture-09.md) | [Презентація](presentations/presentation-09.md) |
+| Лекція 07 Обробка та оптимізація запитів | [Конспект лекції](lectures/lecture-07.md) | [Презентація](presentations/presentation-07.md) |
+| Лекція 08 Управління транзакціями та паралельним доступом | [Конспект лекції](lectures/lecture-08.md) | [Презентація](presentations/presentation-08.md) |
 | _Лекція 09 Теоретичні основи NoSQL систем_ | [Конспект лекції](lectures/lecture-11.md) | [Презентація](presentations/presentation-11.md) |
 | _Лекція 10 MongoDB: архітектура та проєктування схем_ | [Конспект лекції](lectures/lecture-12.md) | [Презентація](presentations/presentation-12.md) |
 | _Лекція 11 Пошукові системи та Elasticsearch_ | [Конспект лекції](lectures/lecture-14.md) | [Презентація](presentations/presentation-14.md) |
