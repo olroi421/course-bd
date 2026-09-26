@@ -2,7 +2,7 @@
 
 ## 🎯 Мета роботи
 
-Застосувати знання роботи з NoSQL базами даних для створення повноцінного вебзастосунку, навчитися проєктувати документні схеми для реальних предметних областей, опанувати інтеграцію MongoDB з фронтенд технологіями, розвинути навички аналізу та оптимізації продуктивності документо-орієнтованих систем.
+Застосувати знання роботи з NoSQL базами даних для створення повноцінного вебзастосунку, навчитися проєктувати документні схеми для реальних предметних областей, опанувати інтеграцію MongoDB з клієнтськими вебтехнологіями, розвинути навички аналізу та оптимізації продуктивності документо-орієнтованих систем.
 
 ## ✅ Завдання
 
@@ -55,6 +55,8 @@
 
 - СКБД MongoDB [Download MongoDB Community Server | MongoDB](https://www.mongodb.com/try/download/community)
 - MongoDB Atlas https://www.mongodb.com/atlas/database
+- MongoDB Shell (`mongosh`) та MongoDB Compass — https://www.mongodb.com/try/download
+- Node.js (актуальна LTS-версія) та менеджер пакетів npm — https://nodejs.org (потрібні для сервера в кроці 6)
 - Редактор VS Code [Download Visual Studio Code - Mac, Linux, Windows](https://code.visualstudio.com/Download)
 - Система керування версіями git https://git-scm.com/downloads
 
@@ -299,11 +301,14 @@ async function getRecentPosts(limit = 10) {
 }
 ```
 
+!!! note "Одне підключення на весь застосунок"
+    `MongoClient` має власний пул з'єднань, тому підключатися слід один раз під час запуску, а не в кожній функції (у прикладі вище це спрощено для наочності). У драйвері версії 4.7 і новіших виклик `client.connect()` перед першим запитом необов'язковий.
+
 **Використання з вебфреймворком Express.js:**
 
 ```javascript
 const express = require('express');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 
 const app = express();
 const url = 'mongodb://localhost:27017';
@@ -335,6 +340,9 @@ app.get('/api/posts', async (req, res) => {
 app.post('/api/posts', express.json(), async (req, res) => {
   try {
     const { title, content, author_id } = req.body;
+    if (!title || !content || !ObjectId.isValid(author_id)) {
+      return res.status(400).json({ error: 'Некоректні дані запиту' });
+    }
     const result = await db.collection('posts').insertOne({
       title,
       content,
@@ -364,7 +372,9 @@ app.listen(3000, () => {
 db.posts.createIndex({ category_id: 1, created_at: -1 });
 
 // Текстовий індекс для пошуку
-db.posts.createIndex({ title: "text", content: "text" });
+// Української мови серед мов текстових індексів немає, тому default_language: "none"
+// (розбиття на слова без стемінгу; пошук чутливий до словоформ)
+db.posts.createIndex({ title: "text", content: "text" }, { default_language: "none" });
 
 // Унікальний індекс
 db.users.createIndex({ email: 1 }, { unique: true });
@@ -403,11 +413,34 @@ db.posts.find()
   .limit(perPage)
   .toArray();
 
-// Краща пагінація через курсор
+// Краща пагінація через курсор: сортування за _id і вибірка «після останнього побаченого»
 const lastId = ObjectId("...");
 db.posts.find({ _id: { $gt: lastId } })
+  .sort({ _id: 1 })
   .limit(20)
   .toArray();
+```
+
+**Пагінація через агрегаційний pipeline** (потрібна для завдання рівня 2): один запит повертає і сторінку, і загальну кількість документів.
+
+```javascript
+const page = 2;
+const perPage = 10;
+
+db.posts.aggregate([
+  { $match: { status: "published" } },
+  { $sort: { published_at: -1, _id: -1 } },
+  {
+    $facet: {
+      items: [
+        { $skip: (page - 1) * perPage },
+        { $limit: perPage },
+        { $project: { title: 1, author: 1, published_at: 1 } }
+      ],
+      total: [{ $count: "count" }]
+    }
+  }
+]);
 ```
 
 ## ▶️ Хід роботи
@@ -631,7 +664,11 @@ db.posts.createIndex({ "author.user_id": 1, created_at: -1 });
 db.posts.createIndex({ "category.category_id": 1, status: 1 });
 db.posts.createIndex({ status: 1, published_at: -1 });
 db.posts.createIndex({ tags: 1 });
-db.posts.createIndex({ title: "text", content: "text", excerpt: "text" });
+// default_language: "none" — для українських текстів (стемінгу для української немає)
+db.posts.createIndex(
+  { title: "text", content: "text", excerpt: "text" },
+  { default_language: "none" }
+);
 
 // Індекси для категорій
 db.categories.createIndex({ slug: 1 }, { unique: true });
@@ -650,12 +687,12 @@ function generateUsers(count) {
     users.push({
       username: `user${i + 1}`,
       email: `user${i + 1}@blog.com`,
-      password_hash: "$2a$10$example_hash_for_testing_purposes_only",
-      role: roles[Math.floor(Math.random() * roles.length)],
+      password_hash: "$2b$10$" + "x".repeat(53), // імітація 60-символьного bcrypt-хешу (схема вимагає minLength: 60); у реальному застосунку пароль хешують бібліотекою bcrypt
+      role: roles[i % roles.length], // ролі розподіляються по колу, тож автори гарантовано будуть
       profile: {
         full_name: `Користувач ${i + 1}`,
         bio: `Біографія користувача ${i + 1}`,
-        avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${i}`,
+        avatar_url: `https://api.dicebear.com/9.x/avataaars/svg?seed=${i}`,
         website: i % 3 === 0 ? `https://user${i + 1}.com` : null
       },
       statistics: {
@@ -761,7 +798,7 @@ const allPosts = db.posts.find().toArray();
 const allUsers = db.users.find().toArray();
 
 allPosts.forEach(post => {
-  const commentsCount = Math.floor(Math.random() * 8) + 1;
+  const commentsCount = Math.floor(Math.random() * 5) + 4; // 4–8 коментарів на пост, тобто щонайменше 200 загалом
   const comments = [];
 
   for (let i = 0; i < commentsCount; i++) {
@@ -898,9 +935,48 @@ db.posts.aggregate([
 ]);
 ```
 
-### Крок 6. Створення HTML інтерфейсу
+### Крок 6. Створення вебінтерфейсу
 
-Створіть файл `index.html`:
+Сторінка в браузері не може напряму звертатися до MongoDB: потрібен серверний прошарок, який читає дані з бази й віддає їх у форматі JSON. Створіть мінімальний сервер на Express.js:
+
+```bash
+mkdir blog-app && cd blog-app
+npm init -y
+npm install express mongodb
+mkdir public
+```
+
+Файл `server.js`:
+
+```javascript
+const express = require('express');
+const { MongoClient } = require('mongodb');
+
+const app = express();
+const client = new MongoClient('mongodb://localhost:27017');
+
+app.use(express.static('public')); // у цій теці лежить index.html
+
+app.get('/api/posts', async (req, res) => {
+  try {
+    const posts = await client.db('blog_system').collection('posts')
+      .find({ status: 'published' })
+      .sort({ created_at: -1 })
+      .limit(50)
+      .toArray();
+    res.json(posts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Не вдалося отримати пости' });
+  }
+});
+
+client.connect().then(() => {
+  app.listen(3000, () => console.log('Сервер працює: http://localhost:3000'));
+});
+```
+
+Запустіть сервер командою `node server.js` та відкрийте `http://localhost:3000`. Далі створіть файл `public/index.html`. Сторінка спочатку намагається завантажити пости з `/api/posts`, а якщо API недоступне (наприклад, файл відкрито просто з диска), показує демонстраційні дані `mockPosts`:
 
 ```html
 <!DOCTYPE html>
@@ -1114,13 +1190,13 @@ db.posts.aggregate([
     </div>
 
     <script>
-        // Симуляція даних з MongoDB (у реальному проєкті використовуйте API)
+        // Резервні демонстраційні дані: використовуються, якщо API недоступне
         const mockPosts = [
             {
                 _id: "1",
                 title: "Вступ до NoSQL баз даних",
                 excerpt: "Детальний огляд переваг NoSQL над традиційними SQL базами даних",
-                author: { username: "ivan_developer", avatar_url: "https://api.dicebear.com/7.x/avataaars/svg?seed=1" },
+                author: { username: "ivan_developer", avatar_url: "https://api.dicebear.com/9.x/avataaars/svg?seed=1" },
                 category: { name: "Бази даних" },
                 tags: ["nosql", "mongodb", "database"],
                 featured_image: "https://picsum.photos/800/400?random=1",
@@ -1136,7 +1212,7 @@ db.posts.aggregate([
                 _id: "2",
                 title: "React Hooks: Повний гайд",
                 excerpt: "Все що потрібно знати про React Hooks для сучасної розробки",
-                author: { username: "maria_frontend", avatar_url: "https://api.dicebear.com/7.x/avataaars/svg?seed=2" },
+                author: { username: "maria_frontend", avatar_url: "https://api.dicebear.com/9.x/avataaars/svg?seed=2" },
                 category: { name: "Веброзробка" },
                 tags: ["react", "javascript", "frontend"],
                 featured_image: "https://picsum.photos/800/400?random=2",
@@ -1151,7 +1227,7 @@ db.posts.aggregate([
                 _id: "3",
                 title: "Docker для початківців",
                 excerpt: "Основи контейнеризації та роботи з Docker",
-                author: { username: "oleksandr_devops", avatar_url: "https://api.dicebear.com/7.x/avataaars/svg?seed=3" },
+                author: { username: "oleksandr_devops", avatar_url: "https://api.dicebear.com/9.x/avataaars/svg?seed=3" },
                 category: { name: "DevOps" },
                 tags: ["docker", "devops", "containers"],
                 featured_image: "https://picsum.photos/800/400?random=3",
@@ -1162,8 +1238,34 @@ db.posts.aggregate([
             }
         ];
 
-        // Завантаження постів
-        function loadPosts(posts = mockPosts) {
+        // Екранування тексту перед вставкою в HTML (захист від XSS)
+        function esc(value) {
+            return String(value ?? '').replace(/[&<>"']/g, ch => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[ch]));
+        }
+
+        function formatDate(value) {
+            const date = new Date(value);
+            return isNaN(date) ? '' : date.toLocaleDateString('uk-UA');
+        }
+
+        let allPosts = mockPosts;
+
+        // Завантаження постів: з API, а за його відсутності — демонстраційні дані
+        async function loadPosts(posts) {
+            if (!posts) {
+                try {
+                    const response = await fetch('/api/posts');
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    allPosts = await response.json();
+                } catch (error) {
+                    console.warn('API недоступне, використовуються демонстраційні дані:', error);
+                    allPosts = mockPosts;
+                }
+                posts = allPosts;
+            }
+
             const grid = document.getElementById('postsGrid');
             grid.innerHTML = '';
 
@@ -1180,17 +1282,17 @@ db.posts.aggregate([
             card.onclick = () => showPostDetails(post);
 
             card.innerHTML = `
-                <img src="${post.featured_image}" alt="${post.title}">
+                <img src="${esc(post.featured_image)}" alt="${esc(post.title)}">
                 <div class="post-content">
-                    <h2 class="post-title">${post.title}</h2>
+                    <h2 class="post-title">${esc(post.title)}</h2>
                     <div class="post-meta">
-                        <span>👤 ${post.author.username}</span>
-                        <span>📁 ${post.category.name}</span>
+                        <span>👤 ${esc(post.author.username)}</span>
+                        <span>📁 ${esc(post.category.name)}</span>
                         <span>👁️ ${post.statistics.views}</span>
                     </div>
-                    <p class="post-excerpt">${post.excerpt}</p>
+                    <p class="post-excerpt">${esc(post.excerpt)}</p>
                     <div class="post-tags">
-                        ${post.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                        ${post.tags.map(tag => `<span class="tag">#${esc(tag)}</span>`).join('')}
                     </div>
                 </div>
             `;
@@ -1204,26 +1306,26 @@ db.posts.aggregate([
             const details = document.getElementById('postDetails');
 
             details.innerHTML = `
-                <img src="${post.featured_image}" alt="${post.title}" style="width: 100%; border-radius: 8px; margin-bottom: 1rem;">
-                <h2>${post.title}</h2>
+                <img src="${esc(post.featured_image)}" alt="${esc(post.title)}" style="width: 100%; border-radius: 8px; margin-bottom: 1rem;">
+                <h2>${esc(post.title)}</h2>
                 <div class="post-meta" style="margin: 1rem 0;">
-                    <span>👤 ${post.author.username}</span>
-                    <span>📁 ${post.category.name}</span>
-                    <span>📅 ${post.created_at}</span>
+                    <span>👤 ${esc(post.author.username)}</span>
+                    <span>📁 ${esc(post.category.name)}</span>
+                    <span>📅 ${formatDate(post.created_at)}</span>
                     <span>👁️ ${post.statistics.views}</span>
                     <span>❤️ ${post.statistics.likes}</span>
                 </div>
                 <div class="post-tags" style="margin-bottom: 1.5rem;">
-                    ${post.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                    ${post.tags.map(tag => `<span class="tag">#${esc(tag)}</span>`).join('')}
                 </div>
-                <p>${post.content}</p>
+                <p>${esc(post.content)}</p>
                 <div class="comments">
                     <h3>Коментарі (${post.comments.length})</h3>
                     ${post.comments.map(comment => `
                         <div class="comment">
-                            <div class="comment-author">${comment.author.username}</div>
-                            <div class="comment-date">${comment.created_at}</div>
-                            <p>${comment.text}</p>
+                            <div class="comment-author">${esc(comment.author.username)}</div>
+                            <div class="comment-date">${formatDate(comment.created_at)}</div>
+                            <p>${esc(comment.text)}</p>
                         </div>
                     `).join('')}
                 </div>
@@ -1240,10 +1342,10 @@ db.posts.aggregate([
         // Пошук постів
         function searchPosts() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = mockPosts.filter(post =>
+            const filtered = allPosts.filter(post =>
                 post.title.toLowerCase().includes(searchTerm) ||
                 post.excerpt.toLowerCase().includes(searchTerm) ||
-                post.tags.some(tag => tag.includes(searchTerm))
+                (post.tags || []).some(tag => tag.includes(searchTerm))
             );
             loadPosts(filtered);
         }
@@ -1270,9 +1372,10 @@ db.posts.aggregate([
 **Реляційна схема (PostgreSQL):**
 
 ```sql
+-- Для автоінкременту використовується GENERATED ... AS IDENTITY (сучасна заміна SERIAL)
 -- Таблиця користувачів
 CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY,
+    user_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     username VARCHAR(30) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
@@ -1282,7 +1385,7 @@ CREATE TABLE users (
 
 -- Таблиця категорій
 CREATE TABLE categories (
-    category_id SERIAL PRIMARY KEY,
+    category_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(50) UNIQUE NOT NULL,
     slug VARCHAR(50) UNIQUE NOT NULL,
     description TEXT
@@ -1290,7 +1393,7 @@ CREATE TABLE categories (
 
 -- Таблиця постів
 CREATE TABLE posts (
-    post_id SERIAL PRIMARY KEY,
+    post_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     title VARCHAR(200) NOT NULL,
     slug VARCHAR(200) UNIQUE NOT NULL,
     content TEXT NOT NULL,
@@ -1306,7 +1409,7 @@ CREATE TABLE posts (
 
 -- Таблиця тегів
 CREATE TABLE tags (
-    tag_id SERIAL PRIMARY KEY,
+    tag_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(50) UNIQUE NOT NULL
 );
 
@@ -1319,7 +1422,7 @@ CREATE TABLE post_tags (
 
 -- Таблиця коментарів
 CREATE TABLE comments (
-    comment_id SERIAL PRIMARY KEY,
+    comment_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     post_id INT REFERENCES posts(post_id),
     user_id INT REFERENCES users(user_id),
     text TEXT NOT NULL,
@@ -1392,14 +1495,16 @@ db.posts.find({ status: "published" });
 
 | Критерій | PostgreSQL | MongoDB |
 |----------|------------|---------|
-| Кількість таблиць/колекцій | 7 таблиць | 3 колекції |
-| Складність запитів | Високаскладні JOIN | Прості find() |
-| Продуктивність читання | Залежить від JOIN | Швидше (без JOIN) |
-| Продуктивність запису | Швидше (нормалізація) | Повільніше (денормалізація) |
-| Гнучкість схеми | Жорстка, потребує міграцій | Гнучка |
-| Цілісність даних | FOREIGN KEY constraints | Програмна валідація |
-| Масштабованість | Вертикальна | Горизонтальна |
-| Консистентність | ACID гарантії | Eventual consistency |
+| Кількість таблиць/колекцій | 6 таблиць | 3 колекції |
+| Складність запитів | Багато JOIN для складних вибірок | Прості `find()` для даних одного документа; `$lookup` для зв'язків між колекціями |
+| Продуктивність читання | Залежить від JOIN та індексів | Швидше для типових запитів, під які спроєктовано схему (дані в одному документі) |
+| Продуктивність запису | Дані зберігаються в одному місці — оновлення простіші | Оновлення дубльованих даних зачіпає багато документів |
+| Гнучкість схеми | Строга, зміни через міграції (для гнучких полів є JSONB) | Гнучка; за потреби обмежується `$jsonSchema` |
+| Цілісність даних | FOREIGN KEY, CHECK, UNIQUE на рівні СУБД | `$jsonSchema`-валідація та унікальні індекси; зовнішніх ключів немає, посилання перевіряє застосунок |
+| Масштабованість | Переважно вертикальна; читання масштабують репліками, горизонтальне — секціонуванням або розширеннями | Горизонтальна через вбудований шардинг; репліки для відмовостійкості |
+| Консистентність | ACID-транзакції | ACID для операцій над одним документом; багатодокументні транзакції підтримуються з версії 4.0, рівень узгодженості налаштовується через read/write concern |
+
+Таблиця узагальнює типові відмінності; у звіті підтверджуйте висновки власними вимірюваннями на тих самих даних та запитах.
 
 [🔼 Здати лабораторну роботу](https://moodle.vcolnuft.volyn.ua/moodle/course/view.php?id=32#section-2)
 

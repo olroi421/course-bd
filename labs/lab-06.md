@@ -1,4 +1,4 @@
-# Лабораторна робота 4 Робота з СУБД MongoDB та реалізація операцій
+# Лабораторна робота 6 Робота з СУБД MongoDB та реалізація операцій
 
 ## 🎯 Мета роботи
 
@@ -48,6 +48,9 @@
 ## 🖥️ Програмне забезпечення
 
 - СКБД MongoDB [Download MongoDB Community Server | MongoDB](https://www.mongodb.com/try/download/community)
+- MongoDB Shell (`mongosh`) — https://www.mongodb.com/try/download/shell
+- MongoDB Compass — https://www.mongodb.com/try/download/compass
+- MongoDB Database Tools (`mongodump`, `mongorestore`, `mongoexport`, `mongoimport`) — https://www.mongodb.com/try/download/database-tools
 - Редактор VS Code [Download Visual Studio Code - Mac, Linux, Windows](https://code.visualstudio.com/Download)
 - Система керування версіями git https://git-scm.com/downloads
 
@@ -127,18 +130,20 @@ MongoDB зберігає дані у вигляді документів BSON (B
 
 **Приклад структури документа:**
 
-```json
+Нижче наведено документ у нотації mongosh (з типами `ObjectId` та `ISODate`); у форматі Extended JSON ці значення записують як `{"$oid": "..."}` і `{"$date": "..."}`.
+
+```javascript
 {
   "_id": ObjectId("507f1f77bcf86cd799439011"),
-  "title": "Майстер і Маргарита",
+  "title": "Тигролови",
   "author": {
-    "name": "Михайло Булгаков",
-    "birth_year": 1891,
-    "nationality": "російський"
+    "name": "Іван Багряний",
+    "birth_year": 1906,
+    "nationality": "український"
   },
-  "genres": ["роман", "містика", "філософія"],
-  "publication_year": 1967,
-  "pages": 480,
+  "genres": ["роман", "пригоди", "політична проза"],
+  "publication_year": 1944,
+  "pages": 416,
   "isbn": "978-966-03-3527-6",
   "available": true,
   "ratings": [
@@ -231,14 +236,23 @@ db.books.updateMany(
 
 // Додавання елементу до масиву
 db.books.updateOne(
-  { title: "Майстер і Маргарита" },
-  { $push: { genres: "сатира" } }
+  { title: "Тигролови" },
+  { $push: { genres: "трилер" } }
 );
 
 // Інкрементування числового значення
 db.books.updateOne(
   { title: "Кобзар" },
   { $inc: { borrowed_count: 1 } }
+);
+```
+
+Оператор `replaceOne` на відміну від `updateOne` **повністю замінює** документ (окрім `_id`) новим, тому поля, яких немає в новому документі, буде втрачено:
+
+```javascript
+db.books.replaceOne(
+  { title: "Кобзар" },
+  { title: "Кобзар", author: "Тарас Шевченко", publication_year: 1840, available: true }
 );
 ```
 
@@ -317,7 +331,7 @@ db.books.find({
 
 ```javascript
 // Пошук за шаблоном
-db.books.find({ title: { $regex: /Майстер/i } });
+db.books.find({ title: { $regex: /Тигролови/i } });
 
 // З урахуванням регістру
 db.books.find({ author: { $regex: "^Михайло" } });
@@ -507,6 +521,9 @@ db.createCollection("books", {
 
 ### Крок 1. Встановлення MongoDB
 
+!!! note "Версії"
+    Команди нижче наведено для MongoDB 8.0. Якщо вийшла новіша версія, скористайтеся інструкцією зі встановлення в [офіційній документації](https://www.mongodb.com/docs/manual/installation/). Утиліти `mongodump`, `mongorestore`, `mongoexport` та `mongoimport` входять до окремого пакета MongoDB Database Tools; у Windows його встановлюють окремо (див. розділ «Програмне забезпечення»).
+
 **Для Windows:**
 
 1. Завантажте MongoDB Community Edition з офіційного сайту: [https://www.mongodb.com/try/download/community](https://www.mongodb.com/try/download/community)
@@ -536,11 +553,13 @@ brew install --cask mongodb-compass
 **Для Linux (Ubuntu/Debian):**
 
 ```bash
-# Імпорт публічного ключа
-wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc | sudo apt-key add -
+# Імпорт публічного ключа (apt-key застарів, ключ зберігаємо в keyrings)
+sudo apt-get install -y gnupg curl
+curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
+   sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg --dearmor
 
-# Додавання репозиторію
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+# Додавання репозиторію (для Ubuntu 24.04 — noble; для 22.04 замініть на jammy)
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
 
 # Оновлення та встановлення
 sudo apt-get update
@@ -592,7 +611,7 @@ db.createCollection("users");
 ### Крок 4. Заповнення колекцій даними
 
 ```javascript
-// Вставка авторів
+// Вставка авторів (наведено фрагмент — доповніть колекцію до 10 документів)
 db.authors.insertMany([
   {
     name: "Тарас Шевченко",
@@ -628,6 +647,20 @@ db.authors.insertMany([
     death_year: 1920,
     nationality: "український",
     biography: "Український письменник-реаліст"
+  },
+  {
+    name: "Григорій Квітка-Основ'яненко",
+    birth_year: 1778,
+    death_year: 1843,
+    nationality: "український",
+    biography: "Письменник, засновник новітньої української прози"
+  },
+  {
+    name: "Василь Стефаник",
+    birth_year: 1871,
+    death_year: 1936,
+    nationality: "український",
+    biography: "Письменник-новеліст, майстер психологічної малої прози"
   }
 ]);
 
@@ -735,7 +768,7 @@ db.books.insertMany([
   }
 ]);
 
-// Вставка користувачів
+// Вставка користувачів (наведено фрагмент — доповніть колекцію до 10 документів)
 db.users.insertMany([
   {
     username: "ivan_petrov",
@@ -864,8 +897,13 @@ db.books.updateOne(
 // Видалення одного документа
 db.books.deleteOne({ title: "Застарілий довідник" });
 
-// Видалення за умовою
-db.books.deleteMany({ available: false, publication_year: { $lt: 1850 } });
+// Видалення за умовою. Щоб не втратити основні дані для наступних кроків,
+// спочатку додаємо тимчасові документи і видаляємо саме їх
+db.books.insertMany([
+  { title: "Тимчасова книга 1", author: "Тест", publication_year: 2000, available: false, temp: true },
+  { title: "Тимчасова книга 2", author: "Тест", publication_year: 2001, available: false, temp: true }
+]);
+db.books.deleteMany({ temp: true, available: false });
 
 // Видалення користувача з призупиненим статусом
 db.users.deleteOne({ status: "suspended", username: "old_user" });
@@ -991,21 +1029,42 @@ db.books.aggregate([
 ]);
 ```
 
+**Представлення (view) для часто використовуваних запитів:**
+
+```javascript
+db.createView("available_books", "books", [
+  { $match: { available: true } },
+  { $project: { title: 1, author: 1, publication_year: 1, pages: 1, _id: 0 } }
+]);
+
+// Представлення використовується як звичайна колекція (лише для читання)
+db.available_books.find({ publication_year: { $lt: 1900 } });
+```
+
 ### Крок 9. Текстовий пошук
 
 ```javascript
-// Створення текстового індексу
-db.books.createIndex({ title: "text", description: "text" });
+// Створення текстового індексу.
+// Української мови серед мов текстових індексів MongoDB немає, тому вказуємо
+// default_language: "none" — лише розбиття на слова, без стемінгу англійською
+db.books.createIndex(
+  { title: "text", description: "text" },
+  { default_language: "none" }
+);
 
-// Пошук за ключовими словами
-db.books.find({ $text: { $search: "кохання Карпати" } });
+// Пошук за ключовими словами (збіг за точною формою слова)
+db.books.find({ $text: { $search: "кохання Карпатах" } });
 
 // Пошук з оцінкою релевантності
 db.books.find(
-  { $text: { $search: "український письменник" } },
+  { $text: { $search: "повість кохання" } },
   { score: { $meta: "textScore" } }
 ).sort({ score: { $meta: "textScore" } });
 ```
+
+!!! note "Обмеження текстового пошуку"
+    - У колекції може бути лише **один** текстовий індекс; щоб створити інший, спочатку видаліть попередній (`db.books.dropIndex(...)`).
+    - Без стемінгу пошук чутливий до словоформ («Карпати» ≠ «Карпатах»). Для завдання рівня 3 («підтримка української мови») розгляньте MongoDB Atlas Search з аналізатором `lucene.ukrainian`, який враховує морфологію, або опишіть у звіті обмеження вбудованого текстового індексу та способи їх обійти.
 
 ### Крок 10. Валідація схеми (рівень 3)
 
@@ -1068,6 +1127,7 @@ db.books.insertOne({
 ### Крок 11. Резервне копіювання
 
 ```bash
+# Шляхи наведено для Linux/macOS; у Windows використовуйте, наприклад, C:\backup\library_backup
 # Створення резервної копії всієї бази даних
 mongodump --db library --out /backup/library_backup
 
@@ -1075,10 +1135,10 @@ mongodump --db library --out /backup/library_backup
 mongodump --db library --collection books --out /backup/books_backup
 
 # Відновлення з резервної копії
-mongorestore --db library /backup/library_backup/library
+mongorestore --nsInclude="library.*" /backup/library_backup
 
 # Експорт в JSON формат
-mongoexport --db library --collection books --out books.json --pretty
+mongoexport --db library --collection books --out books.json --jsonArray --pretty
 
 # Імпорт з JSON
 mongoimport --db library --collection books --file books.json --jsonArray
