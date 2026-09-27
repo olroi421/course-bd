@@ -1,908 +1,285 @@
-# Презентація 15. Хмарні бази даних та Database-as-a-Service
+# Лекція 15. Графові бази даних та мережевий аналіз
 
 ## План лекції
 
-1. Вступ до хмарних обчислень
-2. Моделі хмарних сервісів
-3. Database-as-a-Service (DBaaS)
-4. Провідні хмарні платформи
-5. Міграція до хмари
+1. Основи теорії графів
+2. Графові моделі даних
+3. Neo4j архітектура
+4. Мова Cypher
+5. Алгоритми на графах
+6. Практичні застосування
+7. GraphRAG: графи знань для LLM
 
-## **☁️ Основні поняття:**
+## **📚 Основні поняття:**
 
-**Хмарні обчислення** — надання обчислювальних ресурсів через інтернет на основі оплати за використання.
+**Граф** — абстрактна структура даних, що складається з вершин (вузлів) та ребер (зв'язків) між ними.
 
-**DBaaS** (Database as a Service) — керована база даних як сервіс у хмарі.
+**Графова база даних** — система управління базами даних, оптимізована для зберігання та обробки графових структур даних.
 
-**Serverless** — модель виконання, де провайдер автоматично керує інфраструктурою.
+**Мережевий аналіз** — набір методів та алгоритмів для дослідження структури та властивостей мережевих даних.
 
-**Multi-cloud** — використання кількох хмарних провайдерів одночасно.
+**Патерн-орієнтований запит** — декларативний спосіб опису структури графа, яку потрібно знайти в базі даних.
 
-## **1. Вступ до хмарних обчислень**
+**Зв'язок із попередньою лекцією:** якщо OLAP/Big Data (лекція 14) оптимізують агрегацію над великими масивами, то графові СУБД — обхід і аналіз *зв'язків* між сутностями.
 
-## Еволюція інфраструктури БД
+## **1. Основи теорії графів**
 
-### 📜 **Історичний розвиток:**
+## Математичні основи
 
-```mermaid
-timeline
-    title Еволюція інфраструктури баз даних
-    1980-2000 : On-Premises
-              : Власні сервери
-              : Повний контроль
-    2000-2010 : Віртуалізація
-              : VMware, Hyper-V
-              : Кращe використання ресурсів
-    2010-2015 : IaaS
-              : AWS EC2, Azure VMs
-              : Еластичність
-    2015-2020 : DBaaS
-              : RDS, Cloud SQL
-              : Керовані сервіси
-    2020-сьогодні : Serverless
-                  : Aurora Serverless
-                  : Автомасштабування
-```
+### 📐 **Визначення графа:**
 
-## On-Premises vs Хмара
+Граф G = (V, E), де:
+- **V** — множина вершин (vertices/nodes)
+- **E** — множина ребер (edges/relationships)
 
-### 🏢 **Традиційний підхід:**
+### 🔄 **Типи графів:**
 
-**On-Premises:**
-- Власні сервери в дата-центрі
-- Повний контроль над обладнанням
-- Капітальні інвестиції (CapEx)
-- Власна команда адміністрування
-
-```mermaid
-graph TB
-    A[🏢 КОМПАНІЯ] --> B[Серверна кімната]
-    B --> C[🖥️ Сервери БД]
-    B --> D[🔌 Мережеве обладнання]
-    B --> E[❄️ Охолодження]
-    B --> F[⚡ ДБЖ]
-
-    G[👨‍💼 DBA] --> C
-    H[👨‍🔧 Сисадмін] --> D
-    I[🔧 Інженер] --> E
-```
-
-### ✅ **Переваги:** Повний контроль, дані на місці
-### ❌ **Недоліки:** Висока вартість, складність масштабування
-
-## Переваги хмарних БД
-
-### ☁️ **Чому хмара?**
-
-**Економічні переваги:**
-- 💰 **OpEx замість CapEx** — оплата за використання
-- 📉 **Зниження TCO** — немає витрат на обладнання
-- 🎯 **Прогнозовані витрати** — оплата за ресурси
-
-**Технічні переваги:**
-- ⚡ **Швидкий запуск** — БД за хвилини
-- 📈 **Еластичність** — автомасштабування
-- 🌍 **Глобальне покриття** — регіони по всьому світу
-- 🔄 **Автоматичні бекапи** — вбудовані механізми
-- 🛡️ **Відмовостійкість** — SLA 99.95-99.99%
-
-**Operational переваги:**
-- 🤖 **Автоматичні оновлення** — патчі та версії
-- 📊 **Вбудований моніторинг** — метрики з коробки
-- 🔒 **Безпека** — шифрування, compliance
-
-## Недоліки хмарних БД
-
-### ⚠️ **Виклики та обмеження:**
-
-**Залежність від провайдера (Vendor Lock-in):**
-- Специфічні API та сервіси
-- Складність міграції
-- Прив'язка до екосистеми
-
-**Проблеми контролю:**
-- Обмежений доступ до ОС
-- Неможливість тонкого налаштування
-- Залежність від провайдера
-
-**Вартість:**
-- Може бути дорожче для стабільного навантаження
-- Непередбачувані витрати при сплесках
-- Витрати на трафік
-
-**Латентність:**
-- Мережеві затримки
-- Географічні обмеження
-
-## **2. Моделі хмарних сервісів**
-
-## IaaS, PaaS, SaaS
-
-### 🏗️ **Три рівні хмарних сервісів:**
-
-```mermaid
-graph TB
-    subgraph "On-Premises"
-        A1[Застосунок]
-        A2[Дані]
-        A3[Runtime]
-        A4[Middleware]
-        A5[ОС]
-        A6[Віртуалізація]
-        A7[Сервери]
-        A8[Сховище]
-        A9[Мережа]
-    end
-
-    subgraph "IaaS"
-        B1[Застосунок]
-        B2[Дані]
-        B3[Runtime]
-        B4[Middleware]
-        B5[ОС]
-        B6[Віртуалізація ☁️]
-        B7[Сервери ☁️]
-        B8[Сховище ☁️]
-        B9[Мережа ☁️]
-    end
-
-    subgraph "PaaS"
-        C1[Застосунок]
-        C2[Дані]
-        C3[Runtime ☁️]
-        C4[Middleware ☁️]
-        C5[ОС ☁️]
-        C6[Віртуалізація ☁️]
-        C7[Сервери ☁️]
-        C8[Сховище ☁️]
-        C9[Мережа ☁️]
-    end
-
-    subgraph "SaaS"
-        D1[Застосунок ☁️]
-        D2[Дані ☁️]
-        D3[Runtime ☁️]
-        D4[Middleware ☁️]
-        D5[ОС ☁️]
-        D6[Віртуалізація ☁️]
-        D7[Сервери ☁️]
-        D8[Сховище ☁️]
-        D9[Мережа ☁️]
-    end
-```
-
-## IaaS — Infrastructure as a Service
-
-### 🖥️ **Віртуальна інфраструктура:**
-
-**Що надається:**
-- Віртуальні машини
-- Сховище даних
-- Мережева інфраструктура
-- Балансувальники навантаження
-
-**Приклади для БД:**
-- AWS EC2 + EBS
-- Azure Virtual Machines
-- Google Compute Engine
-
-**Використання:**
-```bash
-# Запуск PostgreSQL на AWS EC2
-aws ec2 run-instances \
-    --image-id ami-12345678 \
-    --instance-type t3.large \
-    --key-name mykey \
-    --security-groups postgres-sg
-
-# Підключення та встановлення
-ssh -i mykey.pem ec2-user@instance-ip
-sudo yum install postgresql14-server
-sudo postgresql-setup initdb
-sudo systemctl start postgresql
-```
-
-### ✅ **Переваги:** Гнучкість, повний контроль
-### ❌ **Недоліки:** Потребує адміністрування
-
-## PaaS — Platform as a Service
-
-### 🎯 **Керована платформа:**
-
-**Що надається:**
-- Керована БД
-- Автоматичні бекапи
-- Масштабування
-- Моніторинг та алерти
-- Патчі та оновлення
-
-**Приклади:**
-- AWS RDS (PostgreSQL, MySQL, MariaDB)
-- Azure Database for PostgreSQL
-- Google Cloud SQL
-- Heroku Postgres
-
-**Використання:**
-```bash
-# Створення PostgreSQL на AWS RDS
-aws rds create-db-instance \
-    --db-instance-identifier mydb \
-    --db-instance-class db.t3.medium \
-    --engine postgres \
-    --master-username admin \
-    --master-user-password secret123 \
-    --allocated-storage 100 \
-    --backup-retention-period 7 \
-    --multi-az
-```
-
-### ✅ **Переваги:** Менше адміністрування, швидкий старт
-### ❌ **Недоліки:** Менше контролю, vendor lock-in
-
-## DBaaS — Database as a Service
-
-### 🗄️ **Спеціалізовані сервіси БД:**
-
-**Повністю керовані БД:**
-- Автоматичне масштабування
-- Вбудована реплікація
-- Point-in-time recovery
-- Глобальний розподіл
-- Автоматичні патчі
-
-**Приклади:**
-- Amazon Aurora (MySQL/PostgreSQL сумісний)
-- Google Cloud Spanner
-- Azure Cosmos DB
-- MongoDB Atlas
-- PlanetScale (MySQL)
-
-**Особливості Aurora Serverless:**
-- Автоматичне вмикання/вимикання
-- Масштабування за секунди
-- Оплата за використання (ACU - Aurora Capacity Units)
-
-## Порівняння моделей для БД
-
-| Модель | Контроль | Адміністрування | Масштабування | Вартість |
-|--------|----------|-----------------|---------------|----------|
-| **IaaS** | 🟢 Високий | 🔴 Повне | 🟡 Ручне | 💰 Низька |
-| **PaaS** | 🟡 Середній | 🟡 Часткове | 🟢 Керовані | 💰💰 Середня |
-| **DBaaS** | 🔴 Обмежений | 🟢 Мінімальне | 🟢 Автоматичне | 💰💰💰 Висока |
-
-**Вибір залежить від:**
-- Розміру команди
-- Експертизи
-- Бюджету
-- Вимог до контролю
-
-## **3. Database-as-a-Service (DBaaS)**
-
-## Amazon RDS
-
-### 🔶 **Керовані реляційні БД від AWS:**
-
-**Підтримувані движки:**
-- PostgreSQL
-- MySQL
-- MariaDB
-- Oracle
-- SQL Server
-- Amazon Aurora
-
-**Ключові можливості:**
-- 🔄 **Automated backups** — до 35 днів
-- 🌍 **Multi-AZ deployment** — відмовостійкість
-- 📖 **Read replicas** — масштабування читання
-- 📊 **Performance Insights** — аналіз продуктивності
-- 🔒 **Encryption** — at rest and in transit
-
-## Архітектура RDS Multi-AZ
-
-### 🏗️ **Високодоступна конфігурація:**
-
-```mermaid
-graph TB
-    A[🌐 Застосунок] --> B[📍 RDS Endpoint]
-
-    B --> C[🎯 PRIMARY INSTANCE<br/>AZ-A]
-    C -.->|Синхронна<br/>реплікація| D[📋 STANDBY INSTANCE<br/>AZ-B]
-
-    C --> E[(💾 EBS Storage<br/>AZ-A)]
-    D --> F[(💾 EBS Storage<br/>AZ-B)]
-
-    G[⚠️ Failure Detection] -.->|Автоматичний<br/>failover| D
-    G --> C
-```
-
-**Failover процес:**
-1. Виявлення збою (30-120 секунд)
-2. Автоматичне перемикання DNS
-3. Standby стає Primary
-4. Відновлення нового Standby
-
-**RTO:** ~60-120 секунд
-**RPO:** ~0 (синхронна реплікація)
-
-## Amazon Aurora
-
-### ⚡ **MySQL/PostgreSQL-сумісний движок від AWS:**
-
-**Інновації Aurora:**
-- 🚀 **До 5x швидше** за MySQL
-- 🌍 **Глобальні бази даних** — cross-region реплікація
-- 🔄 **До 15 read replicas** — низька латентність
-- 💾 **Автомасштабування сховища** — до 128 TB
-- ⚡ **Швидке відновлення** — crash recovery < 60 сек
-
-**Архітектура сховища:**
-```mermaid
-graph TB
-    A[Aurora Instance] --> B[Віртуальний<br/>Storage Layer]
-
-    B --> C[AZ 1<br/>Копія 1-2]
-    B --> D[AZ 2<br/>Копія 3-4]
-    B --> E[AZ 3<br/>Копія 5-6]
-
-    C --> F[10GB Segment]
-    D --> G[10GB Segment]
-    E --> H[10GB Segment]
-```
-
-**Особливості:** 6 копій даних у 3 AZ, кворум для запису (4/6)
-
-## Aurora Serverless
-
-### 🌟 **Автомасштабування на попит:**
-
-**Можливості:**
-- 💤 **Auto-pause** — вимикається при відсутності активності
-- 📈 **Auto-scaling** — від 0.5 ACU до 128 ACU
-- 💰 **Pay per second** — оплата за фактичне використання
-- 🔌 **Data API** — HTTP endpoint для запитів
-
-**Ідеальні сценарії:**
-- Нерегулярне навантаження
-- Розробка та тестування
-- Нові застосунки з невідомим навантаженням
-- Періодичні звіти та аналітика
-
-**Приклад налаштування:**
-```yaml
-MinCapacity: 2 ACU
-MaxCapacity: 16 ACU
-AutoPause: true
-SecondsUntilAutoPause: 300
-```
-
-## Google Cloud SQL
-
-### 🔵 **Керовані БД від Google:**
-
-**Підтримка:**
-- PostgreSQL
-- MySQL
-- SQL Server
-
-**Ключові можливості:**
-- 🌍 **High Availability** — 99.95% SLA
-- 📖 **Read replicas** — до 10 реплік
-- 🔄 **Автоматичне резервне копіювання**
-- 🔧 **Автоматичне масштабування сховища**
-- 🔒 **Customer-managed encryption keys**
-
-**Особливості:**
-- Інтеграція з GCP екосистемою
-- BigQuery Federation
-- Cloud SQL Insights для аналізу
-
-## Google Cloud Spanner
-
-### 🌐 **Глобально розподілена SQL БД:**
-
-**Унікальні характеристики:**
-- 🌍 **Глобальна консистентність** — ACID транзакції
-- 📈 **Горизонтальне масштабування** — петабайти даних
-- 🎯 **99.999% доступність** — multi-region
-- ⏱️ **TrueTime API** — синхронізація часу
-
-**Архітектура:**
-```mermaid
-graph TB
-    A[Глобальний<br/>Cloud Spanner] --> B[Region: US]
-    A --> C[Region: EU]
-    A --> D[Region: Asia]
-
-    B --> E[Zone 1]
-    B --> F[Zone 2]
-    B --> G[Zone 3]
-
-    E & F & G --> H[Paxos<br/>Consensus]
-```
-
-**Використання:**
-- Глобальні фінансові системи
-- Gaming leaderboards
-- Retail inventory
-
-## Azure Database Services
-
-### 🔷 **Пропозиції Microsoft Azure:**
-
-**Azure Database for PostgreSQL:**
-- Single Server
-- Flexible Server (новіша версія)
-- Hyperscale (Citus) — шардинг
-
-**Azure SQL Database:**
-- SQL Server у хмарі
-- Elastic pools
-- Serverless tier
-
-**Azure Cosmos DB:**
-- Multi-model (документи, графи, key-value)
-- Глобальний розподіл
-- 5 рівнів консистентності
-
-**Особливості Azure:**
-- Інтеграція з Active Directory
-- Azure Monitor
-- Defender for Cloud
-
-## MongoDB Atlas
-
-### 🍃 **DBaaS для MongoDB:**
-
-**Можливості:**
-- 🌍 **Multi-cloud** — AWS, Azure, GCP
-- 📈 **Автомасштабування** — compute та storage
-- 🔍 **Atlas Search** — повнотекстовий пошук
-- 📊 **Performance Advisor** — рекомендації
-- 🔄 **Continuous backup** — point-in-time recovery
-
-**Рівні сервісу:**
-- **Shared** — безкоштовний/початковий
-- **Dedicated** — виділені кластери
-- **Serverless** — оплата за операції
-
-**Приклад підключення:**
-```javascript
-const { MongoClient } = require('mongodb');
-
-const uri = "mongodb+srv://user:pass@cluster.mongodb.net/";
-const client = new MongoClient(uri);
-
-await client.connect();
-const database = client.db('mydb');
-const collection = database.collection('users');
-```
-
-## Порівняння провайдерів
-
-| Провайдер | Сильні сторони | Популярні сервіси |
-|-----------|----------------|-------------------|
-| **AWS** | Найбільший вибір, зрілість | Aurora, RDS, DynamoDB |
-| **Google Cloud** | Інновації, BigData | Cloud Spanner, BigQuery |
-| **Azure** | Інтеграція з MS, hybrid | Cosmos DB, SQL Database |
-| **MongoDB Atlas** | Expertise в NoSQL | Managed MongoDB |
-
-**Вибір провайдера залежить від:**
-- Існуючої екосистеми
-- Регіональних вимог
-- Спеціалізації команди
-- Бюджету
-
-## **4. Провідні хмарні платформи**
-
-## AWS для баз даних
-
-### 🔶 **Екосистема Amazon Web Services:**
-
-**Реляційні БД:**
-- **RDS** — керовані БД (PostgreSQL, MySQL, etc.)
-- **Aurora** — високопродуктивний движок
-- **Redshift** — аналітичне сховище даних
-
-**NoSQL:**
-- **DynamoDB** — key-value, документи
-- **DocumentDB** — MongoDB-сумісний
-- **Keyspaces** — Cassandra-сумісний
-
-**Спеціалізовані:**
-- **Neptune** — графова БД
-- **Timestream** — часові ряди
-- **QLDB** — Quantum Ledger (immutable)
-
-## DynamoDB — приклад
-
-### ⚡ **Serverless NoSQL від AWS:**
-
-**Характеристики:**
-- Мілісекундна латентність
-- Автоматичне масштабування
-- Вбудована реплікація
-- Global Tables (multi-region)
-
-**Приклад використання:**
-```python
-import boto3
-
-dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('Users')
-
-# Запис
-table.put_item(
-    Item={
-        'user_id': '12345',
-        'name': 'John Doe',
-        'email': 'john@example.com',
-        'created_at': '2024-10-05'
-    }
-)
-
-# Читання
-response = table.get_item(Key={'user_id': '12345'})
-user = response['Item']
-
-# Query з індексом
-response = table.query(
-    IndexName='email-index',
-    KeyConditionExpression=Key('email').eq('john@example.com')
-)
-```
-
-## Google Cloud Platform для БД
-
-### 🔵 **Пропозиції GCP:**
-
-**Керовані SQL:**
-- **Cloud SQL** — PostgreSQL, MySQL, SQL Server
-- **Cloud Spanner** — глобальна SQL БД
-- **AlloyDB** — PostgreSQL-сумісний (новий)
-
-**NoSQL та аналітика:**
-- **Firestore** — документна БД
-- **Bigtable** — wide-column store
-- **BigQuery** — serverless data warehouse
-
-**Особливості GCP:**
-- Висока продуктивність мережі
-- Інтеграція з ML/AI сервісами
-- Сильна аналітика (BigQuery)
-
-## BigQuery
-
-### 📊 **Serverless аналітичне сховище:**
-
-**Можливості:**
-- Петабайтне масштабування
-- SQL-подібна мова запитів
-- Вбудоване ML (BigQuery ML)
-- Інтеграція з Looker, Data Studio
-
-**Приклад аналізу:**
-```sql
--- Аналіз мільйонів записів за секунди
-SELECT
-    country,
-    COUNT(*) as users,
-    AVG(order_amount) as avg_order,
-    SUM(order_amount) as total_revenue
-FROM `project.dataset.orders`
-WHERE order_date >= '2024-01-01'
-GROUP BY country
-ORDER BY total_revenue DESC
-LIMIT 10;
-
--- ML безпосередньо в SQL
-CREATE MODEL `project.dataset.churn_model`
-OPTIONS(model_type='logistic_reg') AS
-SELECT
-    features.*,
-    churned as label
-FROM `project.dataset.customer_features` as features;
-```
-
-## Microsoft Azure для БД
-
-### 🔷 **Платформа Azure:**
-
-**SQL сервіси:**
-- **Azure SQL Database** — PaaS SQL Server
-- **Azure Database for PostgreSQL/MySQL**
-- **Azure Synapse Analytics** — аналітика
-
-**NoSQL:**
-- **Cosmos DB** — multi-model БД
-- **Table Storage** — key-value сховище
-
-**Унікальні можливості:**
-- Гібридні сценарії (on-prem + cloud)
-- Azure Arc для управління всюди
-- Глибока інтеграція з .NET та MS стеком
-
-## Azure Cosmos DB
-
-### 🌌 **Глобально розподілена multi-model БД:**
-
-**5 рівнів консистентності:**
 ```mermaid
 graph LR
-    A[Strong] --> B[Bounded<br/>Staleness]
-    B --> C[Session]
-    C --> D[Consistent<br/>Prefix]
-    D --> E[Eventual]
-
-    F[Висока<br/>консистентність] -.-> A
-    G[Низька<br/>латентність] -.-> E
+    A[Орієнтований<br/>Directed] -->|має напрямок| B[→]
+    C[Неорієнтований<br/>Undirected] -->|без напрямку| D[—]
+    E[Зважений<br/>Weighted] -->|з вагами| F[350км]
+    G[Мультиграф<br/>Multigraph] -->|множинні ребра| H[⇉]
 ```
 
-**API підтримка:**
-- SQL API (документи)
-- MongoDB API
-- Cassandra API
-- Gremlin API (графи)
-- Table API
+## Приклади графів
 
-**Глобальний розподіл:**
-- Реплікація в кілька регіонів
-- Multi-region writes
-- Автоматичний failover
+### 🌐 **Орієнтований граф:**
 
-## **5. Міграція до хмари**
-
-## Стратегії міграції
-
-### 🚀 **6R стратегій:**
-
-**1. Rehost (Lift and Shift):**
-- Переміщення без змін
-- Найшвидша міграція
-- Мінімальна оптимізація
-
-**2. Replatform (Lift, Tinker and Shift):**
-- Незначні оптимізації
-- Використання керованих сервісів
-- Баланс швидкості та вигоди
-
-**3. Refactor/Re-architect:**
-- Переписування для хмари
-- Максимальна оптимізація
-- Найдовша міграція
-
-**4. Repurchase:**
-- Перехід на SaaS
-- Заміна існуючого рішення
-
-**5. Retire:**
-- Виведення з експлуатації
-
-**6. Retain:**
-- Залишити on-premises
-
-## Процес міграції БД
-
-### 📋 **Покрокова міграція:**
-
-```mermaid
-graph TB
-    A[1️⃣ Оцінка] --> B[2️⃣ Планування]
-    B --> C[3️⃣ Підготовка]
-    C --> D[4️⃣ Міграція даних]
-    D --> E[5️⃣ Тестування]
-    E --> F[6️⃣ Cutover]
-    F --> G[7️⃣ Оптимізація]
-
-    A -.->|Вибір стратегії| H[AWS DMS<br/>Azure Migrate<br/>GCP Database<br/>Migration Service]
-```
-
-**1. Оцінка:**
-- Інвентаризація БД
-- Аналіз залежностей
-- Оцінка складності
-
-**2. Планування:**
-- Вибір цільової платформи
-- Визначення downtime вікна
-- План відкату
-
-## AWS Database Migration Service
-
-### 🔄 **Інструмент міграції від AWS:**
-
-**Можливості:**
-- Гомогенна міграція (Oracle → Oracle)
-- Гетерогенна міграція (Oracle → PostgreSQL)
-- Continuous replication
-- Мінімальний downtime
-
-**Підтримувані джерела:**
-- Oracle, SQL Server, MySQL, PostgreSQL
-- MongoDB, SAP, DB2
-- S3, Amazon RDS
-
-**Приклад процесу:**
-```mermaid
-sequenceDiagram
-    participant S as Source DB<br/>(On-Prem)
-    participant DMS as AWS DMS
-    participant T as Target DB<br/>(RDS)
-
-    S->>DMS: Full Load
-    DMS->>T: Initial data copy
-    S->>DMS: CDC (Change Data Capture)
-    DMS->>T: Continuous replication
-    Note over S,T: Applications cutover
-    T->>T: Production traffic
-```
-
-## Schema Conversion Tool
-
-### 🔧 **AWS SCT для конвертації схем:**
-
-**Функції:**
-- Автоматична конвертація DDL
-- Аналіз складності міграції
-- Звіти про несумісність
-- Рекомендації з оптимізації
-
-**Підтримувані конвертації:**
-- Oracle → PostgreSQL/Aurora
-- SQL Server → PostgreSQL/Aurora
-- MySQL → PostgreSQL
-
-**Workflow:**
-```bash
-# 1. Аналіз вихідної БД
-aws sct analyze-source-database
-
-# 2. Конвертація схеми
-aws sct convert-schema
-
-# 3. Застосування до цільової БД
-aws sct apply-schema
-
-# 4. Генерація звіту
-aws sct generate-assessment-report
-```
-
-## Тестування після міграції
-
-### ✅ **Перевірка коректності:**
-
-**Функціональне тестування:**
-- Порівняння кількості записів
-- Валідація даних
-- Тестування застосунку
-
-**Навантажувальне тестування:**
-```python
-import time
-from locust import HttpUser, task, between
-
-class DatabaseLoadTest(HttpUser):
-    wait_time = between(1, 3)
-
-    @task
-    def read_query(self):
-        self.client.get("/api/users/12345")
-
-    @task(3)
-    def complex_query(self):
-        self.client.post("/api/analytics/sales",
-            json={"period": "monthly"})
-
-    @task
-    def write_query(self):
-        self.client.post("/api/orders",
-            json={"amount": 99.99})
-
-# Запуск
-# locust -f load_test.py --host=https://new-db.example.com
-```
-
-**Порівняння продуктивності:**
-- Response time (P50, P95, P99)
-- Throughput (TPS, QPS)
-- Resource utilization
-
-## Cutover стратегії
-
-### 🔀 **Перемикання на хмарну БД:**
-
-**Big Bang Cutover:**
 ```mermaid
 graph LR
-    A[On-Prem DB<br/>100% traffic] -->|Downtime<br/>window| B[Cloud DB<br/>100% traffic]
+    A[Користувач А] -->|ЗНАЄ| B[Користувач Б]
+    A -->|ПРАЦЮЄ_В| C[Компанія]
+    B -->|ПРАЦЮЄ_В| C
 ```
-- Швидко, але ризиковано
-- Потрібен downtime
 
-**Phased Cutover:**
+**Застосування:** Соціальні мережі, системи слідування
+
+### 🗺️ **Зважений граф:**
+
+```mermaid
+graph LR
+    A[Київ] -->|350км| B[Львів]
+    B -->|70км| C[Луцьк]
+    A -->|400км| D[Одеса]
+```
+
+**Властивості:** ступінь вершини, шлях, цикл, зв'язність
+
+## **2. Графові моделі даних**
+
+## Property Graph Model
+
+### 🎯 **Найпопулярніша модель для GraphDB**
+
+```mermaid
+graph LR
+    P[Person<br/>name: Іван Петров<br/>age: 35] -->|WORKS_IN<br/>since: 2020| D[Department<br/>name: IT]
+    P -->|KNOWS<br/>since: 2015| P2[Person<br/>name: Марія]
+```
+
+**Компоненти:**
+- **Вершини** — сутності з властивостями та мітками
+- **Ребра** — зв'язки з типом, напрямком та властивостями
+
+## RDF та порівняння моделей
+
+### 🌐 **RDF — тріплети суб'єкт-предикат-об'єкт**
+
+```turtle
+ex:IvanPetrov rdf:type foaf:Person .
+ex:IvanPetrov foaf:name "Іван Петров" .
+ex:IvanPetrov ex:worksIn ex:ITDepartment .
+```
+
+**Мова запитів:** SPARQL
+
+| Аспект | Property Graph | RDF |
+|--------|----------------|-----|
+| **Одиниця зберігання** | Вершини + ребра | Тріплети |
+| **Мова запитів** | Cypher, Gremlin | SPARQL |
+| **Використання** | Бізнес-додатки | Семантичний веб |
+
+> **Актуалізація:** до обох моделей додається третій тип "властивості" — **вектор embeddings** на вершині/ресурсі, поєднуючи точний структурний пошук із семантичним пошуком за подібністю (основа GraphRAG)
+
+## **3. Neo4j архітектура**
+
+## Огляд Neo4j
+
+### 🚀 **Найпопулярніша графова СУБД**
+
+- 📊 Нативне зберігання графів, без JOIN
+- 🔒 ACID транзакції
+- 📝 Cypher — декларативна мова запитів
+- 📈 Горизонтальне масштабування
+
+**Обхід графа:** пряме читання pointer-ланцюга вершина → ребро → ребро, без JOIN операцій
+
+## Індексування у Neo4j
+
+### 📑 **Три типи індексів:**
+
+**B-tree** — за замовчуванням, для точних значень і діапазонів
+**Fulltext (Lucene)** — повнотекстовий пошук
+**Векторні** — для embeddings і пошуку за подібністю
+
+```cypher
+CREATE VECTOR INDEX product_embeddings
+FOR (p:Product) ON (p.embedding)
+OPTIONS {indexConfig: {
+  `vector.dimensions`: 768,
+  `vector.similarity_function`: 'cosine'
+}};
+```
+
+> **Актуалізація:** Neo4j 5.x — квантування векторів, гібридні запити (вектор + `MATCH`-фільтр), розмірності узгоджені із сучасними embedding-моделями (1536 для `text-embedding-3-*`)
+
+## **4. Мова Cypher**
+
+### 🎨 **ASCII-art синтаксис**
+
+```cypher
+(p:Person {name: 'Іван'})   // Вершина з міткою й властивістю
+-[:KNOWS {since: 2020}]->   // Ребро з типом і властивістю
+(a)-[:KNOWS*1..3]-(b)       // Шлях довжини від 1 до 3
+```
+
+> **Актуалізація:** з 2024 року Cypher — основа міжнародного стандарту **GQL** (ISO/IEC 39075:2024), першої стандартизованої мови графових запитів
+
+## Основні операції Cypher
+
+```cypher
+-- CREATE
+CREATE (p:Person {name: 'Іван Петров', age: 35});
+
+-- MERGE (створити або знайти)
+MERGE (p:Person {email: 'ivan@example.com'})
+ON CREATE SET p.created = timestamp();
+
+-- MATCH + WHERE + агрегація
+MATCH (p:Person)-[:WORKS_IN]->(d:Department)
+RETURN d.name, COUNT(p) as employeeCount, AVG(p.age) as avgAge;
+
+-- DETACH DELETE
+MATCH (p:Person {name: 'Іван Петров'})
+DETACH DELETE p;
+```
+
+## **5. Алгоритми на графах**
+
+## Пошук шляхів та централітет
+
+### 🛣️ **Дейкстра, BFS**
+
+```cypher
+CALL gds.shortestPath.dijkstra.stream('cityGraph', {
+  sourceNode: id(start), targetNode: id(end),
+  relationshipWeightProperty: 'distance'
+})
+YIELD nodeIds, totalCost
+RETURN [nodeId IN nodeIds | gds.util.asNode(nodeId).name] as route, totalCost;
+```
+
 ```mermaid
 graph TB
-    A[On-Prem DB] -->|90%| C[Apps]
-    B[Cloud DB] -->|10%| C
-
-    D[On-Prem DB] -->|50%| E[Apps]
-    F[Cloud DB] -->|50%| E
-
-    G[On-Prem DB] -->|0%| H[Apps]
-    I[Cloud DB] -->|100%| H
-```
-- Поступово, безпечніше
-- Без downtime
-
-**Blue-Green Deployment:**
-- Дві ідентичні середовища
-- Миттєве перемикання
-- Легкий rollback
-
-## Оптимізація після міграції
-
-### ⚡ **Налаштування для хмари:**
-
-**Використання хмарних можливостей:**
-```sql
--- Read replicas для масштабування
-CREATE READ REPLICA my-db-replica-1
-    FROM my-db-instance
-    IN REGION eu-central-1;
-
--- Автомасштабування сховища
-ALTER DATABASE SET storage_autoscaling = ON
-    WITH max_storage = 1000GB;
-
--- Performance Insights
-ENABLE PERFORMANCE_INSIGHTS
-    WITH retention_period = 7;
+    A[Централітет] --> B[Degree]
+    A --> C[Betweenness]
+    A --> D[PageRank]
+    A --> E[Closeness]
 ```
 
-**Моніторинг та оптимізація:**
-- CloudWatch metrics
-- Slow query logs
-- Performance schema
-- Cost optimization (right-sizing)
+## Виявлення спільнот та подібності
 
-## Виклики міграції
+**Louvain** — максимізація модулярності графа
+**Label Propagation** — швидке розповсюдження міток
+**Node Similarity** — подібність за спільними сусідами
 
-### ⚠️ **Типові проблеми:**
+```cypher
+CALL gds.louvain.stream('socialNetwork')
+YIELD nodeId, communityId
+RETURN communityId, COLLECT(gds.util.asNode(nodeId).name) as members;
+```
 
-**Технічні:**
-- Несумісність версій
-- Різниці в SQL діалектах
-- Зміна лімітів та обмежень
-- Мережева латентність
+> **Актуалізація:** GDS-бібліотека тепер підтримує **GNN**-алгоритми (`node2vec`, `FastRP`, `GraphSAGE`) — генерація embeddings вершин прямо в СУБД
 
-**Організаційні:**
-- Опір змінам
-- Навчання команди
-- Управління ризиками
-- Координація команд
+## **6. Практичні застосування**
 
-**Фінансові:**
-- Непередбачувані витрати
-- Подвійні витрати під час міграції
-- ROI може бути не одразу
+## Основні сценарії використання
 
-**Рішення:** Ретельне планування, pilot проєкти, навчання
+| Сценарій | Приклад запиту |
+|---|---|
+| 👥 **Соціальні мережі** | Рекомендація друзів друзів, стрічка новин |
+| 🔒 **Fraud detection** | Пошук циклів переказів, спільні контакти |
+| 🎯 **Рекомендації** | Collaborative + content-based filtering |
+| 🧠 **Knowledge graphs** | Онтології, ієрархії класів (SUBCLASS_OF) |
 
-## Висновки
+**Приклад — виявлення циклу переказів:**
+```cypher
+MATCH cycle = (acc:Account)-[:TRANSFER*3..5]->(acc)
+WHERE ALL(t IN relationships(cycle) WHERE t.amount > 5000)
+RETURN cycle, LENGTH(cycle) as cycleLength;
+```
 
-### 🎯 **Ключові моменти:**
+## Коли GraphDB — правильний вибір
 
-**Переваги хмарних БД:**
-- Швидкий старт та еластичність
-- Зниження operational burden
-- Глобальна доступність
-- Вбудовані можливості HA/DR
+| ✅ Підходить | ❌ Не найкращий вибір |
+|---|---|
+| Складні багаторівневі зв'язки | Табличні дані без зв'язків |
+| Швидкий обхід і пошук шляхів | OLAP-агрегації, фінзвітність |
+| Динамічна схема | Часові ряди |
+| Мережевий аналіз, спільноти | Прості CRUD |
 
-**Вибір моделі:**
-- IaaS — повний контроль
-- PaaS/DBaaS — баланс
-- Serverless — мінімум управління
+## Екосистема та альтернативи
 
-**Провайдери:**
-- AWS — найширший вибір
-- GCP — інновації та аналітика
-- Azure — Microsoft екосистема
+**Neo4j:** Desktop, Browser, Bloom (візуалізація), GDS, APOC, Aura (DBaaS)
+
+| СУБД | Мова запитів | Особливість |
+|---|---|---|
+| **Neo4j** | Cypher/GQL | Найпопулярніша, ACID |
+| **Amazon Neptune** | Gremlin, SPARQL | Керована AWS |
+| **ArangoDB** | AQL | Multi-model |
+| **TigerGraph** | GSQL | Аналітика реального часу |
+
+## **7. GraphRAG: графи знань для LLM**
+
+### 🕸️ **Нова роль графових БД у 2024–2025**
+
+```mermaid
+graph LR
+    A[📄 Документи] --> B[🤖 LLM: витягування сутностей]
+    B --> C[🕸️ Граф знань]
+    D[❓ Запит] --> E[🔍 Вектор + обхід графа]
+    C --> E
+    E --> F[🤖 LLM: генерація відповіді]
+```
+
+**Проблема чистого векторного RAG:** погано відповідає на запитання, що вимагають простеження *ланцюга зв'язків*
+
+**Переваги GraphRAG:**
+- 🔗 Багатоступеневі запитання через зв'язки
+- 📊 Агрегація на рівні спільнот сутностей
+- ✅ Пояснюваність відповіді через конкретні вузли й ребра
+
+```cypher
+CALL db.index.vector.queryNodes('docEmbeddings', 5, $queryEmbedding)
+YIELD node AS seed, score
+MATCH (seed)-[:MENTIONS|RELATED_TO*1..2]-(context)
+RETURN DISTINCT context.text LIMIT 20;
+```
+
+**Місток до лекції 16:** графові й векторні технології сходяться в єдину архітектуру ШІ-систем
+
+## **Висновки**
+
+### 🎓 **Ключові takeaways:**
+
+**Графові БД — революція у роботі зі зв'язками:**
+- 🔗 Зв'язки як структури першого класу, обхід без JOIN
+- 📝 Cypher/GQL — декларативні запити
+- 🧠 Потужні алгоритми мережевого аналізу (централітет, спільноти)
+
+**Застосування:** соціальні мережі, fraud detection, рекомендації, knowledge graphs
+
+**Нове:** GraphRAG — графи знань як основа надійних, пояснюваних ШІ-систем
+
+**Наступна лекція:** штучний інтелект, векторні бази даних і перспективи розвитку СУБД
